@@ -1,0 +1,38 @@
+[
+	{
+		"question": "What threats are present in DayZ apart from starving, dehydration and zombies?",
+		"answer": "Here is a list of the threats: Cholera, Cold, Influenza (Flu), Salmonella, Chemical Poisoning, Heart Attack, Hemolytic Reaction, Brain Disease (Permanent)."
+	},
+	{
+		"question": "What is Cholera and how do I treat it?",
+		"answer": "It is a disease and the causes of Cholera are drinking from contaminated water, drinking or eating with bloody bare hands. The symptom is vomiting and the treatment is Tetracycline Pills."
+	},
+	{
+		"question": "What is Cold and how do I treat it?",
+		"answer": "It is a virus and the causes of Cold are having a low temperature for too long, being exposed to rain for too long, or being exposed to another Survivor who has a Cold. The symptoms are sneezing and coughing (can spread to nearby survivors) and the treatment is Tetracycline Pills."
+	},
+	{
+		"question": "What is Influenza (Flu) and how do I treat it?",
+		"answer": "It is a virus and the causes of Influenza are having a low temperature for too long, being exposed to rain for too long, or being exposed to another Survivor who has the Flu. The symptoms are sneezing and coughing (can spread to nearby survivors) is Tetracycline Pills."
+	},
+	{
+		"question": "What is Salmonella and how do I treat it?",
+		"answer": "It is a disease and the cause of Salmonella is eating uncooked or raw meat. The symptom is vomiting and the treatment is Charcoal Tablets."
+		},
+	{
+		"question": "What is Chemical Poisoning and how do I treat it?",
+		"answer": "It is an illness and the causes of Chemical Poisoning are drinking Alcoholic Tincture, Gasoline, or Disinfectant Spray. The symptoms are hydration and blood loss and the treatment is Charcoal Tablets."
+	},
+	{
+		"question": "What is Heart Attack and how do I treat it?",
+		"answer": "It is an illness and the causes of Heart Attack are a quick loss of blood or too much shock. The symptoms are falling unconscious, health damage, possibly death and the treatment is Epinephrine Auto-injector."
+	},
+	{
+		"question": "What is Hemolytic Reaction and how do I treat it?",
+		"answer": "It is an illness and the cause of Hemolytic Reaction is receiving blood that is incompatible with your own. The symptoms are blood loss and health damage and there is no treatment."
+	},
+	{
+		"question": "What is Brain Damage and how do I treat it?",
+		"answer": "It is a disease and the cause of Brain Damage is eating Human Steak or Human Meat of any kind from dead players. The symptoms are Uncontrollable random laughter and random tremors and the treatment is suicide or death."
+	}
+]
