@@ -15,12 +15,19 @@ function handleUserInput() {
     const question = userInput.value.trim();
 	if (question !== "") {
 		displayUserMessage(question);
-		let checkQuestions = checkJsonQuestions(question, jsonCategories);
-		let checkKeywords = false;
-		if (!checkQuestions) {
-			checkKeywords = checkJsonKeywords(question, jsonKeywords);
-		}
-		userInput.value = "";
+		simulateBotTyping(100).then(async () => {
+			let checkQuestions = await checkJsonQuestions(question, jsonCategories);
+			let checkKeywords = false;
+			if (!checkQuestions) {
+				checkKeywords = await checkJsonKeywords(question, jsonKeywords);
+			}
+			if (!checkQuestions && !checkKeywords) {
+				// Simulate bot thinking/waiting time
+				await new Promise(resolve => setTimeout(resolve, 2000)); // Adjust delay as needed
+				await searchGoogle(question);
+			}
+			userInput.value = "";
+		});
 	}
 }
 
@@ -49,90 +56,84 @@ function generateBotResponse(question) {
     return "I'm just a simple bot. I don't have access to real DayZ information, but I'm here to help!";
 }
 
-function fetchFAQAnswers(question) {
-}
-
 // and i added this part below here, first part is google, next part is bot typing look-alike
 
 async function searchGoogle(question) {
-    try {
+	try {
         const response = await fetch(`https://www.googleapis.com/customsearch/v1?q=${question}&key=${GOOGLE_API_KEY}&cx=${GOOGLE_CUSTOM_SEARCH_ID}`);
-        const data = await response.json();
-        const firstResult = data.items && data.items[0];
-        return firstResult ? `Google: ${firstResult.snippet}` : null;
+        if (response.ok) {
+            const data = await response.json();
+            const firstResult = data.items && data.items[0];
+            const botResponse = firstResult ? `Google: ${firstResult.snippet}` : "No results found.";
+            
+            displayBotMessage(botResponse); // Display the bot's response in the chat box
+        } else {
+            console.error("API request failed:", response.status, response.statusText);
+        }
     } catch (error) {
-        console.error("Error fetching Google response:", error);
-        return null;
+        console.error("Error fetching data:", error);
     }
 }
 
-async function simulateBotTyping() {
+async function simulateBotTyping(delayForWords) {
     const typingElement = document.createElement("div");
     typingElement.classList.add("bot-message", "bot-typing");
     chatBox.appendChild(typingElement);
 
-    const botResponse = "This is a sample response from the bot."; // Replace with your bot's response
+    const botResponse = "Bot is writing..."; // Replace with your bot's response
     let currentCharIndex = 0;
 
     const typingInterval = setInterval(() => {
         if (currentCharIndex <= botResponse.length) {
-            typingElement.innerHTML = `Bot is typing: ${botResponse.substring(0, currentCharIndex)}`;
+            typingElement.innerHTML = `<span style="color: gold;">${botResponse.substring(0, currentCharIndex)}</span>`;
             chatBox.scrollTop = chatBox.scrollHeight;
             currentCharIndex++;
         } else {
             clearInterval(typingInterval);
-            setTimeout(() => {
+            if (typingElement.parentElement === chatBox) {
                 chatBox.removeChild(typingElement);
                 displayBotMessage(botResponse);
-            }, 1000);
+            }
         }
-    }, 100);
+    }, delayForWords);
 }
 
-function checkJsonQuestions(question, jsonCategories) { 
-	// Load the JSON file
-	let matchFound = false;
-	for (const category of jsonCategories) {
-		fetch(category + ".json")
-		.then((response) => response.json())
-		.then((jsonArray) => {
-			for (const jsonField of jsonArray) {
-			matchFound = false;
-			// Check if question matches any question inside the json file
-				if (question.toLowerCase() === jsonField["question"].toLowerCase()) {
-					displayBotMessage(jsonField["answer"]);
-					// Match found => break and get out of loop.
-					return true;
-				}
-			}
-			
-		})
-		.catch((error) => {
-			console.error("Error loading or parsing JSON:", error);
-		});
-	}
-	return false;
+async function checkJsonQuestions(question, jsonCategories) {
+    try {
+        for (const category of jsonCategories) {
+            const response = await fetch(category + ".json");
+            const jsonArray = await response.json();
+            for (const jsonField of jsonArray) {
+                if (question.toLowerCase() === jsonField["question"].toLowerCase()) {
+                    displayBotMessage(jsonField["answer"]);
+                    return true; // Match found => return true immediately
+                }
+            }
+        }
+    } catch (error) {
+        console.error("Error loading or parsing JSON:", error);
+        return false; // Return false in case of error
+    }
+    return false; // No matches found in questions
 }
 
-function checkJsonKeywords(question, keywordsCategories) {
-	// Load the JSON file
-	for (const keyword of keywordsCategories) {
-		fetch(keyword + ".json")
-		.then((response) => response.json())
-		.then((jsonArray) => {
+
+async function checkJsonKeywords(question, keywordsCategories) {
+    try {
+		for (const keyword of keywordsCategories) {
+			const response = await fetch(keyword + ".json");
+			const jsonArray = await response.json();
 			for (const jsonField of jsonArray) {
-			// Check if question matches any question inside the json file
-				if (question.toLowerCase().includes(jsonField["keyword"].toLowerCase())) {
+				const keywordRegex = new RegExp(`\\b${jsonField["keyword"]}\\b`, 'i');
+				if (keywordRegex.test(question)) {
 					displayBotMessage(jsonField["answer"]);
-					// Match found => break and get out of loop.
-					return true;	
+					return true; // Match found => return true immediately
 				}
 			}
-			
-		})
-		.catch((error) => {
-			console.error("Error loading or parsing JSON:", error);
-		});
-	}
-	return false;
+		}
+    } catch (error) {
+        console.error("Error loading or parsing JSON:", error);
+        return false; // Return false in case of error
+    }
+    return false; // No matches found in keywords
 }
