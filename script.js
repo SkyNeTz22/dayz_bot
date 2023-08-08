@@ -17,14 +17,11 @@ function handleUserInput() {
 		displayUserMessage(question);
 		simulateBotTyping(100).then(async () => {
 			let checkQuestions = await checkJsonQuestions(question, jsonCategories);
-			console.log("Questions: " + checkQuestions);
 			let checkKeywords = false;
 			if (!checkQuestions) {
 				checkKeywords = await checkJsonKeywords(question, jsonKeywords);
-				console.log("Keywords: " + checkKeywords);
 			}
 			if (!checkQuestions && !checkKeywords) {
-				console.log("Questions + Keywords: " + checkQuestions + checkKeywords);
 				// Simulate bot thinking/waiting time
 				await new Promise(resolve => setTimeout(resolve, 2000)); // Adjust delay as needed
 				await searchGoogle(question);
@@ -88,7 +85,7 @@ async function simulateBotTyping(delayForWords) {
 
     const typingInterval = setInterval(() => {
         if (currentCharIndex <= botResponse.length) {
-            typingElement.innerHTML = `<span style="color: gold;">Bot is typing: ${botResponse.substring(0, currentCharIndex)}</span>`;
+            typingElement.innerHTML = `<span style="color: gold;">${botResponse.substring(0, currentCharIndex)}</span>`;
             chatBox.scrollTop = chatBox.scrollHeight;
             currentCharIndex++;
         } else {
@@ -123,16 +120,17 @@ async function checkJsonQuestions(question, jsonCategories) {
 
 async function checkJsonKeywords(question, keywordsCategories) {
     try {
-        for (const keyword of keywordsCategories) {
-            const response = await fetch(keyword + ".json");
-            const jsonArray = await response.json();
-            for (const jsonField of jsonArray) {
-                if (question.toLowerCase().includes(jsonField["keyword"].toLowerCase())) {
-                    displayBotMessage(jsonField["answer"]);
-                    return true; // Match found => return true immediately
-                }
-            }
-        }
+		for (const keyword of keywordsCategories) {
+			const response = await fetch(keyword + ".json");
+			const jsonArray = await response.json();
+			for (const jsonField of jsonArray) {
+				const keywordRegex = new RegExp(`\\b${jsonField["keyword"]}\\b`, 'i');
+				if (keywordRegex.test(question)) {
+					displayBotMessage(jsonField["answer"]);
+					return true; // Match found => return true immediately
+				}
+			}
+		}
     } catch (error) {
         console.error("Error loading or parsing JSON:", error);
         return false; // Return false in case of error
