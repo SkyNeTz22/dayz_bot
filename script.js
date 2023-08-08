@@ -15,11 +15,15 @@ function handleUserInput() {
     const question = userInput.value.trim();
 	if (question !== "") {
 		displayUserMessage(question);
+		simulateBotTyping(100);
 		let checkQuestions = checkJsonQuestions(question, jsonCategories);
 		let checkKeywords = false;
 		if (!checkQuestions) {
 			checkKeywords = checkJsonKeywords(question, jsonKeywords);
 		}
+		//if (!checkKeywords) {
+		//	searchGoogle(question);
+		//}
 		userInput.value = "";
 	}
 }
@@ -49,49 +53,50 @@ function generateBotResponse(question) {
     return "I'm just a simple bot. I don't have access to real DayZ information, but I'm here to help!";
 }
 
-function fetchFAQAnswers(question) {
-}
-
 // and i added this part below here, first part is google, next part is bot typing look-alike
 
 async function searchGoogle(question) {
-    try {
+	try {
         const response = await fetch(`https://www.googleapis.com/customsearch/v1?q=${question}&key=${GOOGLE_API_KEY}&cx=${GOOGLE_CUSTOM_SEARCH_ID}`);
-        const data = await response.json();
-        const firstResult = data.items && data.items[0];
-        return firstResult ? `Google: ${firstResult.snippet}` : null;
+        if (response.ok) {
+            const data = await response.json();
+            const firstResult = data.items && data.items[0];
+            const botResponse = firstResult ? `Google: ${firstResult.snippet}` : "No results found.";
+            
+            displayBotMessage(botResponse); // Display the bot's response in the chat box
+        } else {
+            console.error("API request failed:", response.status, response.statusText);
+        }
     } catch (error) {
-        console.error("Error fetching Google response:", error);
-        return null;
+        console.error("Error fetching data:", error);
     }
 }
 
-async function simulateBotTyping() {
+async function simulateBotTyping(delayForWords) {
     const typingElement = document.createElement("div");
     typingElement.classList.add("bot-message", "bot-typing");
     chatBox.appendChild(typingElement);
 
-    const botResponse = "This is a sample response from the bot."; // Replace with your bot's response
+    const botResponse = "Bot is writing..."; // Replace with your bot's response
     let currentCharIndex = 0;
 
     const typingInterval = setInterval(() => {
         if (currentCharIndex <= botResponse.length) {
-            typingElement.innerHTML = `Bot is typing: ${botResponse.substring(0, currentCharIndex)}`;
+            typingElement.innerHTML = `<span style="color: gold;">Bot is typing: ${botResponse.substring(0, currentCharIndex)}</span>`;
             chatBox.scrollTop = chatBox.scrollHeight;
             currentCharIndex++;
         } else {
             clearInterval(typingInterval);
-            setTimeout(() => {
+            if (typingElement.parentElement === chatBox) {
                 chatBox.removeChild(typingElement);
                 displayBotMessage(botResponse);
-            }, 1000);
+            }
         }
-    }, 100);
+    }, delayForWords);
 }
 
 function checkJsonQuestions(question, jsonCategories) { 
 	// Load the JSON file
-	let matchFound = false;
 	for (const category of jsonCategories) {
 		fetch(category + ".json")
 		.then((response) => response.json())
@@ -127,8 +132,7 @@ function checkJsonKeywords(question, keywordsCategories) {
 					// Match found => break and get out of loop.
 					return true;	
 				}
-			}
-			
+			}	
 		})
 		.catch((error) => {
 			console.error("Error loading or parsing JSON:", error);
