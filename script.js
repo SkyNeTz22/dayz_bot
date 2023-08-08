@@ -2,6 +2,10 @@ const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
 
+const GOOGLE_API_KEY = "AIzaSyBg3v0HTwv-TEPIOsTYge4VziKm5GV7tS0";
+const GOOGLE_CUSTOM_SEARCH_ID = "93ef247daff724aaf";
+
+
 sendBtn.addEventListener("click", handleUserInput);
 
 function handleUserInput() {
@@ -64,4 +68,39 @@ function generateBotResponse(question) {
 }
 
 function fetchFAQAnswers(question) {
+}
+
+async function searchGoogle(question) {
+    try {
+        const response = await fetch(`https://www.googleapis.com/customsearch/v1?q=${question}&key=${GOOGLE_API_KEY}&cx=${GOOGLE_CUSTOM_SEARCH_ID}`);
+        const data = await response.json();
+        const firstResult = data.items && data.items[0];
+        return firstResult ? Google: ${firstResult.snippet} : null;
+    } catch (error) {
+        console.error("Error fetching Google response:", error);
+        return null;
+    }
+}
+
+async function simulateBotTyping() {
+    const typingElement = document.createElement("div");
+    typingElement.classList.add("bot-message", "bot-typing");
+    chatBox.appendChild(typingElement);
+
+    const botResponse = "This is a sample response from the bot."; // Replace with your bot's response
+    let currentCharIndex = 0;
+
+    const typingInterval = setInterval(() => {
+        if (currentCharIndex <= botResponse.length) {
+            typingElement.innerHTML = Bot is typing: ${botResponse.substring(0, currentCharIndex)};
+            chatBox.scrollTop = chatBox.scrollHeight;
+            currentCharIndex++;
+        } else {
+            clearInterval(typingInterval);
+            setTimeout(() => {
+                chatBox.removeChild(typingElement);
+                displayBotMessage(botResponse);
+            }, 1000);
+        }
+    }, 100);
 }
