@@ -78,7 +78,7 @@ async function searchGoogle(question) {
         const response = await fetch(`https://www.googleapis.com/customsearch/v1?q=${question}&key=${GOOGLE_API_KEY}&cx=${GOOGLE_CUSTOM_SEARCH_ID}`);
         const data = await response.json();
         const firstResult = data.items && data.items[0];
-        return firstResult ? Google: ${firstResult.snippet} : null;
+        return firstResult ? `Google: ${firstResult.snippet}` : null;
     } catch (error) {
         console.error("Error fetching Google response:", error);
         return null;
@@ -95,7 +95,7 @@ async function simulateBotTyping() {
 
     const typingInterval = setInterval(() => {
         if (currentCharIndex <= botResponse.length) {
-            typingElement.innerHTML = Bot is typing: ${botResponse.substring(0, currentCharIndex)};
+            typingElement.innerHTML = `Bot is typing: ${botResponse.substring(0, currentCharIndex)}`;
             chatBox.scrollTop = chatBox.scrollHeight;
             currentCharIndex++;
         } else {
