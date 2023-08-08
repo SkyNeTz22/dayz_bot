@@ -10,34 +10,15 @@ const GOOGLE_CUSTOM_SEARCH_ID = "93ef247daff724aaf";
 sendBtn.addEventListener("click", handleUserInput);
 
 function handleUserInput() {
-	const categories = ["ammo_questions", "general_questions", "guns_questions", "sickness_questions"];
+	const jsonCategories = ["ammo_questions", "general_questions", "guns_questions", "sickness_questions"];
+	const jsonKeywords = ["keywords_ar"];
     const question = userInput.value.trim();
 	if (question !== "") {
 		displayUserMessage(question);
-        // Load the JSON file
-		let matchFound = false;
-		for (const category of categories) {
-			fetch(category + ".json")
-			.then((response) => response.json())
-			.then((jsonArray) => {
-				for (const jsonField of jsonArray) {
-				matchFound = false;
-				// Check if question matches any question inside the json file
-					if (question.toLowerCase() === jsonField["question"].toLowerCase()) {
-						displayBotMessage(jsonField["answer"]);
-						// Match found => break and get out of loop.
-						matchFound = true;
-						break;		
-					}
-				}
-				
-			})
-			.catch((error) => {
-				console.error("Error loading or parsing JSON:", error);
-			});
-			if (matchFound) {
-				break;
-			}
+		let checkQuestions = checkJsonQuestions(question, jsonCategories);
+		let checkKeywords = false;
+		if (!checkQuestions) {
+			checkKeywords = checkJsonKeywords(question, jsonKeywords);
 		}
 		userInput.value = "";
 	}
@@ -106,4 +87,52 @@ async function simulateBotTyping() {
             }, 1000);
         }
     }, 100);
+}
+
+function checkJsonQuestions(question, jsonCategories) { 
+	// Load the JSON file
+	let matchFound = false;
+	for (const category of jsonCategories) {
+		fetch(category + ".json")
+		.then((response) => response.json())
+		.then((jsonArray) => {
+			for (const jsonField of jsonArray) {
+			matchFound = false;
+			// Check if question matches any question inside the json file
+				if (question.toLowerCase() === jsonField["question"].toLowerCase()) {
+					displayBotMessage(jsonField["answer"]);
+					// Match found => break and get out of loop.
+					return true;
+				}
+			}
+			
+		})
+		.catch((error) => {
+			console.error("Error loading or parsing JSON:", error);
+		});
+	}
+	return false;
+}
+
+function checkJsonKeywords(question, keywordsCategories) {
+	// Load the JSON file
+	for (const keyword of keywordsCategories) {
+		fetch(keyword + ".json")
+		.then((response) => response.json())
+		.then((jsonArray) => {
+			for (const jsonField of jsonArray) {
+			// Check if question matches any question inside the json file
+				if (question.toLowerCase().includes(jsonField["keyword"].toLowerCase())) {
+					displayBotMessage(jsonField["answer"]);
+					// Match found => break and get out of loop.
+					return true;	
+				}
+			}
+			
+		})
+		.catch((error) => {
+			console.error("Error loading or parsing JSON:", error);
+		});
+	}
+	return false;
 }
