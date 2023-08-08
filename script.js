@@ -15,7 +15,7 @@ function handleUserInput() {
     const question = userInput.value.trim();
 	if (question !== "") {
 		displayUserMessage(question);
-		simulateBotTyping(100).then(async () => {
+		simulateBotTyping(10, "Bot is writing...").then(async () => {
 			let checkQuestions = await checkJsonQuestions(question, jsonCategories);
 			let checkKeywords = false;
 			if (!checkQuestions) {
@@ -65,8 +65,7 @@ async function searchGoogle(question) {
             const data = await response.json();
             const firstResult = data.items && data.items[0];
             const botResponse = firstResult ? `Google: ${firstResult.snippet}` : "No results found.";
-            
-            displayBotMessage(botResponse); // Display the bot's response in the chat box
+            simulateBotTyping(10, botResponse); // Display the bot's response in the chat box
         } else {
             console.error("API request failed:", response.status, response.statusText);
         }
@@ -75,12 +74,10 @@ async function searchGoogle(question) {
     }
 }
 
-async function simulateBotTyping(delayForWords) {
+async function simulateBotTyping(delayForWords, botResponse) {
     const typingElement = document.createElement("div");
     typingElement.classList.add("bot-message", "bot-typing");
     chatBox.appendChild(typingElement);
-
-    const botResponse = "Bot is writing..."; // Replace with your bot's response
     let currentCharIndex = 0;
 
     const typingInterval = setInterval(() => {
