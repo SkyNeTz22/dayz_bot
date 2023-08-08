@@ -15,16 +15,22 @@ function handleUserInput() {
     const question = userInput.value.trim();
 	if (question !== "") {
 		displayUserMessage(question);
-		simulateBotTyping(100);
-		let checkQuestions = checkJsonQuestions(question, jsonCategories);
-		let checkKeywords = false;
-		if (!checkQuestions) {
-			checkKeywords = checkJsonKeywords(question, jsonKeywords);
-		}
-		//if (!checkKeywords) {
-		//	searchGoogle(question);
-		//}
-		userInput.value = "";
+		simulateBotTyping(100).then(async () => {
+			let checkQuestions = await checkJsonQuestions(question, jsonCategories);
+			console.log("Questions: " + checkQuestions);
+			let checkKeywords = false;
+			if (!checkQuestions) {
+				checkKeywords = await checkJsonKeywords(question, jsonKeywords);
+				console.log("Keywords: " + checkKeywords);
+			}
+			if (!checkQuestions && !checkKeywords) {
+				console.log("Questions + Keywords: " + checkQuestions + checkKeywords);
+				// Simulate bot thinking/waiting time
+				await new Promise(resolve => setTimeout(resolve, 2000)); // Adjust delay as needed
+				await searchGoogle(question);
+			}
+			userInput.value = "";
+		});
 	}
 }
 
@@ -95,48 +101,41 @@ async function simulateBotTyping(delayForWords) {
     }, delayForWords);
 }
 
-function checkJsonQuestions(question, jsonCategories) { 
-	// Load the JSON file
-	for (const category of jsonCategories) {
-		fetch(category + ".json")
-		.then((response) => response.json())
-		.then((jsonArray) => {
-			for (const jsonField of jsonArray) {
-			matchFound = false;
-			// Check if question matches any question inside the json file
-				if (question.toLowerCase() === jsonField["question"].toLowerCase()) {
-					displayBotMessage(jsonField["answer"]);
-					// Match found => break and get out of loop.
-					return true;
-				}
-			}
-			
-		})
-		.catch((error) => {
-			console.error("Error loading or parsing JSON:", error);
-		});
-	}
-	return false;
+async function checkJsonQuestions(question, jsonCategories) {
+    try {
+        for (const category of jsonCategories) {
+            const response = await fetch(category + ".json");
+            const jsonArray = await response.json();
+            for (const jsonField of jsonArray) {
+                if (question.toLowerCase() === jsonField["question"].toLowerCase()) {
+                    displayBotMessage(jsonField["answer"]);
+                    return true; // Match found => return true immediately
+                }
+            }
+        }
+    } catch (error) {
+        console.error("Error loading or parsing JSON:", error);
+        return false; // Return false in case of error
+    }
+    return false; // No matches found in questions
 }
 
-function checkJsonKeywords(question, keywordsCategories) {
-	// Load the JSON file
-	for (const keyword of keywordsCategories) {
-		fetch(keyword + ".json")
-		.then((response) => response.json())
-		.then((jsonArray) => {
-			for (const jsonField of jsonArray) {
-			// Check if question matches any question inside the json file
-				if (question.toLowerCase().includes(jsonField["keyword"].toLowerCase())) {
-					displayBotMessage(jsonField["answer"]);
-					// Match found => break and get out of loop.
-					return true;	
-				}
-			}	
-		})
-		.catch((error) => {
-			console.error("Error loading or parsing JSON:", error);
-		});
-	}
-	return false;
+
+async function checkJsonKeywords(question, keywordsCategories) {
+    try {
+        for (const keyword of keywordsCategories) {
+            const response = await fetch(keyword + ".json");
+            const jsonArray = await response.json();
+            for (const jsonField of jsonArray) {
+                if (question.toLowerCase().includes(jsonField["keyword"].toLowerCase())) {
+                    displayBotMessage(jsonField["answer"]);
+                    return true; // Match found => return true immediately
+                }
+            }
+        }
+    } catch (error) {
+        console.error("Error loading or parsing JSON:", error);
+        return false; // Return false in case of error
+    }
+    return false; // No matches found in keywords
 }
