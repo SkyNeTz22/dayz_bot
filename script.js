@@ -2,6 +2,7 @@ const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
 
+// i added this two rows below
 const GOOGLE_API_KEY = "AIzaSyBg3v0HTwv-TEPIOsTYge4VziKm5GV7tS0";
 const GOOGLE_CUSTOM_SEARCH_ID = "93ef247daff724aaf";
 
@@ -69,6 +70,8 @@ function generateBotResponse(question) {
 
 function fetchFAQAnswers(question) {
 }
+
+// and i added this part below here, first part is google, next part is bot typing look-alike
 
 async function searchGoogle(question) {
     try {
