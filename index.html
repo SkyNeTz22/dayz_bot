@@ -3,22 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <title>DayZ Bot</title>
 </head>
-<body class="bg-secondary">
-    <div class="container-sm border border-light-subtle">
-        <h1>DayZ Bot - Q&A</h1>
-        <div class="chat-box" id="chatBox">
-            <div class="bot-message" style="color: gold;">Bot: Hello! I'm the DayZ bot. How can I assist you?</div>
-        </div>
-        <div class="user-input">
-            <input type="text" id="userInput" placeholder="Type your question...">
-            <button id="sendBtn" type="button" class="btn btn-outline-dark">Send</button>
+<body class="bg-dark">
+    <div class="container">
+
+        
+      
+        <div class="position-absolute top-50 start-50 translate-middle overflow-hidden">
+            <div class="chat-container">
+                <nav class="navbar bg-dark border-bottom border-body position-absolute top-0 start-50 translate-middle-x" data-bs-theme="dark">
+                    <h1 class=""><p class="text-body-emphasis">DayZ ChatBot</p></h1>
+                </nav>
+                <div class="example-questions text-center">
+                    <button class="btn btn-outline-secondary" onclick="askBot('What is DayZ?')">What is DayZ?</button>
+                    <button class="btn btn-outline-secondary" onclick="askBot('How do I find weapons?')">How do I find weapons?</button>
+                    <button class="btn btn-outline-secondary" onclick="askBot('What are the survival basics?')">What is the goal of DayZ?</button>
+                </div>
+                <div class="chat-box" id="chatBox">
+                    
+                </div>
+                <div class="user-input input-group">
+                    <input type="text" id="userInput" class="form-control" placeholder="Type your question...">
+                    <i></i>
+                    <button id="sendBtn" class="btn btn-outline-secondary icon-link icon-link-hover" type="button" id="button-addon2">     
+                        Send<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
+
     <script src="script.js"></script>
+    <script src="text.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
 </body>
 </html>
