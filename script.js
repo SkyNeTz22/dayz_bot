@@ -35,8 +35,7 @@ async function handleUserInput() {
 				numberOfLetters = checkKeywords.intValue;
 			}
             if (!checkQuestions.boolValue && !checkKeywords.boolValue) {
-                await simulateBotTyping(50, "Bot is thinking...");
-                await searchGoogle(question);
+                await searchGoogle(question); // to "lock" the user input for google too..
             }
         } catch (error) {
             console.error("An error occurred:", error);
