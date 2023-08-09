@@ -1,24 +1,52 @@
-.cursor {
-	position: relative;
-}
-.cursor	i {
-	position: absolute;
-	width: 1px;
-	height: 80%;
-	background-color: gray;
-	left: 5px;
-	top: 10%;
-	animation-name: blink;
-	animation-duration: 800ms;
-	animation-iteration-count: infinite;
-	opacity: 1;
+.bot-message {
+    background-color: #7c7c7c;
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+    margin: 5px 0;
 }
 
-.cursor input:focus + i {
-	display: none;
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: space-between;
 }
 
-@keyframes blink {
-	from { opacity: 1; }
-	to { opacity: 0; }
+.user-input {
+    
+    padding: 10px;
+    border-top: 1px solid #ccc;
+}
+
+.chat-box {
+    border: 1px solid #ccc;
+    height: 500px;
+    width: 100%; 
+    width: 600px;
+}
+
+.navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.navbar h1 {
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    padding: 10px 0;
+}
+
+.example-questions {
+    margin-top: 100px;
+    text-align: center;
+}
+
+.bot-avatar {
+    width: 30px; 
+    height: auto; 
+    margin-right: 5px; 
 }

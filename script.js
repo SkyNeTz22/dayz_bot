@@ -3,8 +3,7 @@ const userInput = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
 
 // i added this two rows below
-const GOOGLE_API_KEY = "AIzaSyBg3v0HTwv-TEPIOsTYge4VziKm5GV7tS0";
-const GOOGLE_CUSTOM_SEARCH_ID = "93ef247daff724aaf";
+
 
 let isBotTyping = false;
 async function handleUserInput() {
@@ -23,7 +22,7 @@ async function handleUserInput() {
         userInput.value = "";
 		let numberOfLetters = 0;
         try {
-            await simulateBotTyping(50, "Bot is writing...");
+            await simulateBotTyping(50, " is writing...");
             await new Promise(resolve => setTimeout(resolve, 2000));
 
             let checkQuestions = await checkJsonQuestions(question, jsonCategories);
@@ -35,15 +34,15 @@ async function handleUserInput() {
 				numberOfLetters = checkKeywords.intValue;
 			}
             if (!checkQuestions.boolValue && !checkKeywords.boolValue) {
-                await simulateBotTyping(50, "Bot is thinking...");
-                await searchGoogle(question);
+                await simulateBotTyping(50, " is thinking...");
+                
             }
         } catch (error) {
             console.error("An error occurred:", error);
         }
 		await new Promise(resolve => setTimeout(resolve, 1000));
 		if (numberOfLetters != 0) {
-			await new Promise(resolve => setTimeout (resolve, 60 * numberOfLetters + 1000));
+			await new Promise(resolve => setTimeout(resolve, 50 * numberOfLetters));
 		}
         isBotTyping = false;
     }
@@ -51,13 +50,16 @@ async function handleUserInput() {
 sendBtn.addEventListener("click", handleUserInput);
 
 function displayUserMessage(message) {
-    const userMessage = `<div class="user-message" style="color: cyan;">User: ${message}</div>`;
+    const userMessage = `<div class="user-message" style="color: white;"><strong>Creature</strong>: ${message}</div>`;
     chatBox.innerHTML += userMessage;
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 function displayBotMessage(message) {
-    const botMessage = `<div class="bot-message" style="color: gold;">Bot: ${message}</div>`;
+    const botMessage =`<div class="bot-message">
+    <img src="bot.png" alt="Robot" class="bot-avatar">
+    <span class="bot-text">${message}</span>
+</div>`;
     chatBox.innerHTML += botMessage;
     chatBox.scrollTop = chatBox.scrollHeight;
 }
@@ -77,21 +79,6 @@ function generateBotResponse(question) {
 
 // and i added this part below here, first part is google, next part is bot typing look-alike
 
-async function searchGoogle(question) {
-	try {
-        const response = await fetch(`https://www.googleapis.com/customsearch/v1?q=${question}&key=${GOOGLE_API_KEY}&cx=${GOOGLE_CUSTOM_SEARCH_ID}`);
-        if (response.ok) {
-            const data = await response.json();
-            const firstResult = data.items && data.items[0];
-            const botResponse = firstResult ? `Google: ${firstResult.snippet}` : "No results found.";
-            simulateBotTyping(50, botResponse); // Display the bot's response in the chat box
-        } else {
-            console.error("API request failed:", response.status, response.statusText);
-        }
-    } catch (error) {
-        console.error("Error fetching data:", error);
-    }
-}
 
 async function simulateBotTyping(delayForWords, botResponse) {
     const typingElement = document.createElement("div");
@@ -101,7 +88,7 @@ async function simulateBotTyping(delayForWords, botResponse) {
 
     const typingInterval = setInterval(() => {
         if (currentCharIndex <= botResponse.length) {
-            typingElement.innerHTML = `<span style="color: gold;">${botResponse.substring(0, currentCharIndex)}</span>`;
+            typingElement.innerHTML = `<span class="typing-color">${botResponse.substring(0, currentCharIndex)}</span>`;
             chatBox.scrollTop = chatBox.scrollHeight;
             currentCharIndex++;
         } else {
@@ -168,4 +155,13 @@ function countLetters(sentence) {
 		numberOfLetters++;
 	}
 	return numberOfLetters;
+}
+
+
+
+// test - need to find the answer in json
+
+function askBot(question) {
+    userInput.value = question;
+    handleUserInput();
 }
