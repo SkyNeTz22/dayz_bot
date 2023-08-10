@@ -13,6 +13,22 @@ const randomResponses = [
     "I'm still learning, but I'll do my best to help!",
 ];
 
+const greetings = [
+    "Greetings, survivor!",
+    "Hello there, adventurer!",
+    "Salutations! How can I assist you today?",
+    "Hey, survivor! Ready to dive into some DayZ knowledge?",
+    "Greetings and salutations! What DayZ questions do you have?",
+];
+
+const inappropriateKeywords = ["porn", "sex", "racism", "politics", "jew", "nigger", "idiot", "morron", "retard", "cp", "shut up", "stfu", "fuck off", "bite me"];
+
+
+function getRandomGreeting() {
+    const randomIndex = Math.floor(Math.random() * greetings.length);
+    return greetings[randomIndex];
+}
+
 function getRandomResponse() {
     const randomIndex = Math.floor(Math.random() * randomResponses.length);
     return randomResponses[randomIndex];
@@ -22,6 +38,47 @@ async function handleUserInput() {
     if (isBotTyping) {
         return;
     }
+    
+    const userMessage = userInput.value.trim().toLowerCase();
+
+    // Check for inappropriate keywords
+    const containsInappropriateKeyword = inappropriateKeywords.some(keyword => userMessage.includes(keyword));
+
+    if (containsInappropriateKeyword) {
+        // Delete the inappropriate message and display a placeholder message
+        displayUserMessage("Message deleted", "color: red; font-weight: bold;" );
+        userInput.value = ""; // Clear the input field
+        isBotTyping = true;
+        const inappropriateResponses = [
+            "That wasn't very nice...",
+            "Oh my, you can't write that!",
+            "Wash those fingers!",
+            "I'm sorry, but I can't respond to inappropriate content.",
+            "Inappropriate content is not welcome here.",
+        ];
+        const randomInappropriateResponse = inappropriateResponses[Math.floor(Math.random() * inappropriateResponses.length)];
+
+        await simulateBotTyping(50, randomInappropriateResponse);
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        isBotTyping = false;
+        return;
+    }
+
+    // Handle greetings
+    if (userMessage.includes("hi") || userMessage.includes("hello") || userMessage.includes("hey") || userMessage.includes("zup") || userMessage.includes("what's up")) {
+        const randomGreeting = getRandomGreeting();
+        displayUserMessage(userMessage);
+        await simulateBotTyping(50, randomGreeting);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        isBotTyping = false;
+        userInput.value = ""; // Clear the input field
+        return;
+    }
+
+
+
+
 
     isBotTyping = true;
 
@@ -70,8 +127,8 @@ userInput.addEventListener("keydown", function(event) {
     }
 });
 
-function displayUserMessage(message) {
-    const userMessage = `<div class="user-message" style="color: white;"><strong>Creature</strong>: ${message}</div>`;
+function displayUserMessage(message, style = "") {
+    const userMessage = `<div class="user-message" style="color: white;"><strong>Creature</strong>: <span style="${style}">${message}</span></div>`;
     chatBox.innerHTML += userMessage;
     chatBox.scrollTop = chatBox.scrollHeight;
 }
