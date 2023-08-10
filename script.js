@@ -2,9 +2,6 @@ const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
 
-let isBotTyping = false;
-
-
 const randomResponses = [
     "I'm here to assist you!",
     "Feel free to ask me anything!",
@@ -12,7 +9,6 @@ const randomResponses = [
     "That's an interesting question!",
     "I'm still learning, but I'll do my best to help!",
 ];
-
 const greetings = [
     "Greetings, survivor!",
     "Hello there, adventurer!",
@@ -20,30 +16,29 @@ const greetings = [
     "Hey, survivor! Ready to dive into some DayZ knowledge?",
     "Greetings and salutations! What DayZ questions do you have?",
 ];
-
 const inappropriateKeywords = ["porn", "sex", "racism", "politics", "jew", "nigger", "idiot", "morron", "retard", "cp", "shut up", "stfu", "fuck off", "bite me"];
+let isBotTyping = false;
 
 
+// Function to get random greeting from the array
 function getRandomGreeting() {
     const randomIndex = Math.floor(Math.random() * greetings.length);
     return greetings[randomIndex];
 }
-
+// Get to get random response from the array
 function getRandomResponse() {
     const randomIndex = Math.floor(Math.random() * randomResponses.length);
     return randomResponses[randomIndex];
 }
 
+// Main function to handle user input
 async function handleUserInput() {
     if (isBotTyping) {
         return;
     }
-    
     const userMessage = userInput.value.trim().toLowerCase();
-
     // Check for inappropriate keywords
     const containsInappropriateKeyword = inappropriateKeywords.some(keyword => userMessage.includes(keyword));
-
     if (containsInappropriateKeyword) {
         // Delete the inappropriate message and display a placeholder message
         displayUserMessage("Message deleted", "color: red; font-weight: bold;" );
@@ -57,14 +52,11 @@ async function handleUserInput() {
             "Inappropriate content is not welcome here.",
         ];
         const randomInappropriateResponse = inappropriateResponses[Math.floor(Math.random() * inappropriateResponses.length)];
-
         await simulateBotTyping(50, randomInappropriateResponse);
-
         await new Promise(resolve => setTimeout(resolve, 1000));
         isBotTyping = false;
         return;
     }
-
     // Handle greetings
     if (userMessage.includes("hi") || userMessage.includes("hello") || userMessage.includes("hey") || userMessage.includes("zup") || userMessage.includes("what's up")) {
         const randomGreeting = getRandomGreeting();
@@ -75,27 +67,23 @@ async function handleUserInput() {
         userInput.value = ""; // Clear the input field
         return;
     }
-
-
-
-
-
     isBotTyping = true;
-
     const jsonCategories = ["ammo_questions", "general_questions", "guns_questions", "sickness_questions"];
     const jsonKeywords = ["keywords_ar"];
     const question = userInput.value.trim();
-
+	// Look for answers based on question
     if (question !== "") {
         displayUserMessage(question);
         userInput.value = "";
         let numberOfLetters = 0;
         try {
+			// First check questions
             let checkQuestions = await checkJsonQuestions(question, jsonCategories);
             let checkKeywords = false;
             if (checkQuestions.boolValue) {
                 numberOfLetters = checkQuestions.intValue;
             } else if (!checkQuestions.boolValue) {
+				// if questions aren't found, look for keywords
                 checkKeywords = await checkJsonKeywords(question, jsonKeywords);
                 if (checkKeywords.boolValue) {
                     numberOfLetters = checkKeywords.intValue;
@@ -107,7 +95,6 @@ async function handleUserInput() {
 				await new Promise(resolve => setTimeout(resolve, 70 * numberOfLetters));
                 await simulateBotTyping(50, randomResponse);
 				await new Promise(resolve => setTimeout(resolve, 1000));
-
             }
         } catch (error) {
             console.error("An error occurred:", error);
@@ -119,20 +106,22 @@ async function handleUserInput() {
         isBotTyping = false;
     }
 }
-sendBtn.addEventListener("click", handleUserInput);
-userInput.addEventListener("keydown", function(event) {
+sendBtn.addEventListener("click", handleUserInput);				// sendBtn click
+userInput.addEventListener("keydown", function(event) {			// userInput enter key
     if (event.key === "Enter") {
         event.preventDefault(); // Prevent the default Enter key behavior (e.g., adding a new line)
         handleUserInput(); // Call the handleUserInput function
     }
 });
 
+// Function to display user input after enter/click
 function displayUserMessage(message, style = "") {
     const userMessage = `<div class="user-message" style="color: white;"><strong>Creature</strong>: <span style="${style}">${message}</span></div>`;
     chatBox.innerHTML += userMessage;
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+// Function to display output
 function displayBotMessage(message) {
     const botMessage =`<div class="bot-message">
     <img src="bot.png" alt="Robot" class="bot-avatar">
@@ -142,22 +131,8 @@ function displayBotMessage(message) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-function getBotResponse(question) {
-    // You can implement the actual bot logic here to generate responses based on the question.
-    const botResponse = generateBotResponse(question);
-    setTimeout(() => {
-        displayBotMessage(botResponse);
-    }, 500);
-}
 
-function generateBotResponse(question) {
-    // Replace this with your actual logic to generate responses.
-    return "I'm just a simple bot. I don't have access to real DayZ information, but I'm here to help!";
-}
-
-// and i added this part below here, first part is google, next part is bot typing look-alike
-
-
+// Functionality to simulate bot typing look-alike
 async function simulateBotTyping(delayForWords, botResponse) {
     const typingElement = document.createElement("div");
     typingElement.classList.add("bot-message", "bot-typing");
@@ -179,6 +154,7 @@ async function simulateBotTyping(delayForWords, botResponse) {
     }, delayForWords);
 }
 
+// Helper function to go through all questions
 async function checkJsonQuestions(question, jsonCategories) {
     try {
 	    let bestMatch = { occurrences: 0, answer: null };
@@ -217,7 +193,7 @@ async function checkJsonQuestions(question, jsonCategories) {
     return false; // No matches found in questions
 }
 
-
+// Helper function to go through all keywords
 async function checkJsonKeywords(question, keywordsCategories) {
     try {
 		for (const keyword of keywordsCategories) {
@@ -240,13 +216,6 @@ async function checkJsonKeywords(question, keywordsCategories) {
         return false; // Return false in case of error
     }
     return false; // No matches found in keywords
-}
-
-// test - need to find the answer in json
-
-function askBot(question) {
-    userInput.value = question;
-    handleUserInput();
 }
 
 // Helper function to check occurrences of words
