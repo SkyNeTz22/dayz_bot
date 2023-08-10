@@ -34,6 +34,12 @@ window.onload = function () {
 	new Promise(resolve => setTimeout(resolve, 1000));
 }
 
+// Function for menu questions
+function askBot(question) {
+    userInput.value = question;
+    handleUserInput();
+}
+
 // Main function to handle user input
 async function handleUserInput() {
     if (isBotTyping) {
