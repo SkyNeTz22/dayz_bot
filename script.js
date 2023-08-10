@@ -3,32 +3,35 @@ const userInput = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
 
 const randomResponses = [
-    "I'm here to assist you!",
-    "Feel free to ask me anything!",
-    "Let me think...",
-    "That's an interesting question!",
-    "I'm still learning, but I'll do my best to help!",
+    "I'm here to assist you. If I fail to do so, please use the \"REPORT\" button so the issue can be fixed!",
+    "That's an interesting question for which I do not have an answer yet. Please submit any questions you didn't have an answer for so that we can fix it using the \"REPORT\" button!",
+    "I'm still learning, but I'll do my best to help. If I am not providing the correct answer for your question, please report it using the \"REPORT\" button!",
 ];
 const greetings = [
     "Greetings, survivor!",
     "Hello there, adventurer!",
-    "Salutations! How can I assist you today?",
+    "Welcome, traveler! How can I assist you today?",
     "Hey, survivor! Ready to dive into some DayZ knowledge?",
-    "Greetings and salutations! What DayZ questions do you have?",
+    "Greetings! What DayZ questions do you have?",
 ];
-const inappropriateKeywords = ["porn", "sex", "racism", "politics", "jew", "nigger", "idiot", "morron", "retard", "cp", "shut up", "stfu", "fuck off", "bite me"];
+const inappropriateKeywords = ["porn", "sex", "racism", "politics", "jew", "nigger", "idiot", "morron", "retard", "cp", "shut up", "stfu", "fuck off", "bite me", "suck my dick", "dick", "pussy", "nigga", "nigg", "N word", "dickhead", "motherfucker", "dick head", "mother fucker", "asshole", "bastard", "moron", "idiot"];
 let isBotTyping = false;
-
 
 // Function to get random greeting from the array
 function getRandomGreeting() {
     const randomIndex = Math.floor(Math.random() * greetings.length);
     return greetings[randomIndex];
 }
+
 // Get to get random response from the array
 function getRandomResponse() {
     const randomIndex = Math.floor(Math.random() * randomResponses.length);
     return randomResponses[randomIndex];
+}
+
+window.onload = function () {
+	simulateBotTyping(50, getRandomGreeting());
+	new Promise(resolve => setTimeout(resolve, 1000));
 }
 
 // Main function to handle user input
@@ -38,9 +41,10 @@ async function handleUserInput() {
     }
     const userMessage = userInput.value.trim().toLowerCase();
     // Check for inappropriate keywords
-    const containsInappropriateKeyword = inappropriateKeywords.some(keyword => userMessage.includes(keyword));
+    const containsInappropriateKeyword = inappropriateKeywords.some(keyword => userMessage.toLowerCase().includes(keyword.toLowerCase()));
     if (containsInappropriateKeyword) {
         // Delete the inappropriate message and display a placeholder message
+        displayUserMessage("Message deleted", "color: red; font-weight: bold;" );
         displayUserMessage("Message deleted", "color: red; font-weight: bold;" );
         userInput.value = ""; // Clear the input field
         isBotTyping = true;
@@ -69,7 +73,7 @@ async function handleUserInput() {
     }
     isBotTyping = true;
     const jsonCategories = ["ammo_questions", "general_questions", "guns_questions", "sickness_questions"];
-    const jsonKeywords = ["keywords_ar"];
+    const jsonKeywords = ["keywords_ar", "keywords_sickness"];
     const question = userInput.value.trim();
 	// Look for answers based on question
     if (question !== "") {
@@ -78,18 +82,24 @@ async function handleUserInput() {
         let numberOfLetters = 0;
         try {
 			// First check questions
-            let checkQuestions = await checkJsonQuestions(question, jsonCategories);
+			let checkQuestions = await checkJsonQuestions(question, jsonCategories);
+            let checkQuestionsWordsOccurences = false;
             let checkKeywords = false;
-            if (checkQuestions.boolValue) {
-                numberOfLetters = checkQuestions.intValue;
-            } else if (!checkQuestions.boolValue) {
-				// if questions aren't found, look for keywords
-                checkKeywords = await checkJsonKeywords(question, jsonKeywords);
-                if (checkKeywords.boolValue) {
-                    numberOfLetters = checkKeywords.intValue;
-                }
+			if (checkQuestions.boolValue) {
+				numberOfLetters = checkQuestions.intValue;
+			} else {
+				checkQuestionsWordsOccurences = await checkJsonQuestionsWordsOccurences(question, jsonCategories);
+				if (checkQuestionsWordsOccurences.boolValue) {
+					numberOfLetters = checkQuestionsWordsOccurences.intValue;
+				} else {
+					// if questions aren't found, look for keywords
+					checkKeywords = await checkJsonKeywords(question, jsonKeywords);
+					if (checkKeywords.boolValue) {
+						numberOfLetters = checkKeywords.intValue;
+					}
+				}
             }
-            if (!checkQuestions.boolValue && !checkKeywords.boolValue) {
+            if (!checkQuestions.boolValue && !checkQuestionsWordsOccurences.boolValue && !checkKeywords.boolValue) {
                 const randomResponse = getRandomResponse();
 				numberOfLetters = countLetters(randomResponse);
 				await new Promise(resolve => setTimeout(resolve, 70 * numberOfLetters));
@@ -131,7 +141,6 @@ function displayBotMessage(message) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-
 // Functionality to simulate bot typing look-alike
 async function simulateBotTyping(delayForWords, botResponse) {
     const typingElement = document.createElement("div");
@@ -154,8 +163,32 @@ async function simulateBotTyping(delayForWords, botResponse) {
     }, delayForWords);
 }
 
-// Helper function to go through all questions
+// Helper function to match the question directly to avoid multiple operations
 async function checkJsonQuestions(question, jsonCategories) {
+    try {
+        for (const category of jsonCategories) {
+            const response = await fetch(category + ".json");
+            const jsonArray = await response.json();
+            for (const jsonField of jsonArray) {
+                if (question.toLowerCase() === jsonField["question"].toLowerCase()) {
+                    simulateBotTyping(50, jsonField["answer"]);
+					let numberOfLetters = countLetters(jsonField["answer"]);
+					const result = [numberOfLetters, true];
+					result.intValue = result[0];
+					result.boolValue = result[1];
+					return result; // Match found => return true immediately
+                }
+            }
+        }
+    } catch (error) {
+        console.error("Error loading or parsing JSON:", error);
+        return false; // Return false in case of error
+    }
+    return false; // No matches found in questions
+}
+
+// Helper function to go through all questions
+async function checkJsonQuestionsWordsOccurences(question, jsonCategories) {
     try {
 	    let bestMatch = { occurrences: 0, answer: null };
         for (const category of jsonCategories) {
@@ -178,7 +211,12 @@ async function checkJsonQuestions(question, jsonCategories) {
             }
 			response.close;
         }
-		if (bestMatch.answer !== null) {
+		console.log("Current question: " + question);
+		if (bestMatch.answer === null) {
+			console.log("Could not find answer in all questions.");
+		}
+		else {
+			console.log("Final answer: " + bestMatch.answer);
             simulateBotTyping(50, bestMatch.answer);
             let numberOfLetters = countLetters(bestMatch.answer);
             const result = [numberOfLetters, true];
@@ -220,18 +258,25 @@ async function checkJsonKeywords(question, keywordsCategories) {
 
 // Helper function to check occurrences of words
 function checkQuestionMatch(userQuestion, jsonQuestion) {
+	userQuestion = cleanStringsKeepSpaces(userQuestion);
+	jsonQuestion = cleanStringsKeepSpaces(jsonQuestion);
     const userWords = userQuestion.toLowerCase().split(" ");
     const jsonWords = jsonQuestion.toLowerCase().split(" ");
-
     let occurrences = 0;
-
     userWords.forEach(userWord => {
         if (jsonWords.includes(userWord)) {
             occurrences++;
         }
     });
-
-    return occurrences;
+	if (occurrences > 0) {
+		// console.log(`User words: ${userWords}`);
+		// console.log(`JSON words: ${jsonWords}`);
+		// console.log(`Occurrences: ${occurrences}`);
+		return occurrences;
+	}
+	else {
+		return -1;
+	}
 }
 
 // Helper function to count letters
@@ -241,4 +286,10 @@ function countLetters(sentence) {
 		numberOfLetters++;
 	}
 	return numberOfLetters;
+}
+
+// Helper function to clean out strings;
+function cleanStringsKeepSpaces(input) {
+    // Use a regular expression to replace any characters that are not letters or spaces
+    return input.replace(/[^a-zA-Z\s]/g, '');
 }
