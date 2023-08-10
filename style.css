@@ -14,9 +14,7 @@
 }
 
 .user-input {
-    
     padding: 10px;
-    
 }
 
 .chat-box {
@@ -25,6 +23,7 @@
     height: 700px;
     width: 100%; 
     width: 800px;
+	overflow: auto;
 }
 
 .navbar {
