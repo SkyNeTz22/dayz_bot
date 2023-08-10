@@ -37,55 +37,55 @@
 	},
 	{
 		"question": "What are the survival basics?",
-		"answer": "The main objective of DayZ Standalone is to survive by managing your character's health, hunger, thirst, and other needs while avoiding or confronting zombies and other players."
+		"answer": "The survival basics are: Health management, Inventory management, Navigation and exploration, Crafting and gathering, Zombie and threat management, Fire starting and cooking, Shelter building, Interaction with other survivors, Medical procedures, Environmentel hazards, communication and Stealth and avoidance."
 	},
 	{
-		"question": "",
-		"answer": ""
+		"question": "Health management",
+		"answer": "Monitor your health, hunger, thirst, and overall condition regularly, to eat and drink to maintain your energy and hydration levels and to use bandages, rags, and medical supplies to treat injuries and illnesses."
 	},
 	{
-		"question": "",
-		"answer": ""
+		"question": "Inventory management",
+		"answer": "Organize your inventory efficiently to carry essential items and maximize storage space. Prioritize items like food, water, medical supplies, and defensive equipment."
 	},
 	{
-		"question": "",
-		"answer": ""
+		"question": "Navigation and exploration",
+		"answer": "Use landmarks, signs, and the in-game map to navigate the world. Learn to read road signs, town names, and topographical features for effective navigation."
 	},
 	{
-		"question": "",
-		"answer": ""
+		"question": "Crafting and gathering",
+		"answer": "Gather materials from the environment, such as sticks, rags, and stones. Craft basic tools like improvised weapons, clothing, and backpacks."
 	},
 	{
-		"question": "",
-		"answer": ""
+		"question": "Zombie and threat management",
+		"answer": "Approach zombies carefully or avoid them altogether to minimize the risk of combat. Use melee weapons or firearms to defend against zombies and other hostile players."
 	},
 	{
-		"question": "",
-		"answer": ""
+		"question": "Fire starting and cooking",
+		"answer": "Learn to start fires using matches, lighters, or other ignition sources. Cook raw food to prevent illness and increase its nutritional value."
 	},
 	{
-		"question": "",
-		"answer": ""
+		"question": "Shelter building",
+		"answer": "Set up temporary shelters to rest and store supplies. Use tents or improvised shelters to protect yourself from the elements."
 	},
 	{
-		"question": "",
-		"answer": ""
+		"question": "Interaction with other survivors",
+		"answer": "Approach other survivors cautiously and assess the situation before engaging in conversation or cooperation. Be prepared for both friendly interactions and potential threats from other survivors."
 	},
 	{
-		"question": "",
-		"answer": ""
+		"question": "Medical procedures",
+		"answer": "Learn how to disinfect wounds, apply bandages, and use medical supplies to heal injuries. Use splints to treat fractures and prevent further damage."
 	},
 	{
-		"question": "",
-		"answer": ""
+		"question": "Environmental hazards",
+		"answer": "Be aware of temperature changes and protect yourself from hypothermia or heatstroke. Use protective clothing and equipment to defend against environmental hazards."
 	},
 	{
-		"question": "",
-		"answer": ""
+		"question": "Communication",
+		"answer": "Use in-game voice or text chat to communicate with other survivors. Coordinate with friends or allies to enhance your survival chances."
 	},
 	{
-		"question": "",
-		"answer": ""
+		"question": "Stealth and avoidance",
+		"answer": "Use cover and concealment to avoid detection by zombies and other survivors. Remember, no stranger is your friend unless proven otherwise. Crouch or go prone to reduce your visibility and noise level."
 	},
 	{
 		"question": "",
