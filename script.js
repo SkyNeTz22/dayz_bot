@@ -78,8 +78,8 @@ async function handleUserInput() {
         return;
     }
     isBotTyping = true;
-    const jsonCategories = ["ammo_questions", "general_questions", "guns_questions", "sickness_questions"];
-    const jsonKeywords = ["keywords_ar", "keywords_sickness"];
+    const jsonCategoriesFiles = ["ammo_questions", "general_questions", "guns_questions", "sickness_questions"];
+    const jsonKeywordsFiles = ["keywords_ammo", "keywords_ar", "keywords_sickness"];
     const question = userInput.value.trim();
 	// Look for answers based on question
     if (question !== "") {
@@ -88,24 +88,19 @@ async function handleUserInput() {
         let numberOfLetters = 0;
         try {
 			// First check questions
-			let checkQuestions = await checkJsonQuestions(question, jsonCategories);
-            let checkQuestionsWordsOccurences = false;
+			let checkQuestions = await checkJsonQuestions(question, jsonCategoriesFiles);
+            // let checkQuestionsWordsOccurences = false;
             let checkKeywords = false;
 			if (checkQuestions.boolValue) {
 				numberOfLetters = checkQuestions.intValue;
-			} else {
-				checkQuestionsWordsOccurences = await checkJsonQuestionsWordsOccurences(question, jsonCategories);
-				if (checkQuestionsWordsOccurences.boolValue) {
-					numberOfLetters = checkQuestionsWordsOccurences.intValue;
-				} else {
-					// if questions aren't found, look for keywords
-					checkKeywords = await checkJsonKeywords(question, jsonKeywords);
-					if (checkKeywords.boolValue) {
-						numberOfLetters = checkKeywords.intValue;
-					}
+			} else { // If no question found in jsons, continue to keywords pairs and hope for the best
+				checkKeywords = await findBestAnswer(question, jsonKeywordsFiles);
+				if (checkKeywords.boolValue) {
+					numberOfLetters = checkKeywords.intValue;
 				}
-            }
-            if (!checkQuestions.boolValue && !checkQuestionsWordsOccurences.boolValue && !checkKeywords.boolValue) {
+			}
+			// If all fails, give user some random input.
+            if (!checkQuestions.boolValue && !checkKeywords.boolValue) {//&& !checkQuestionsWordsOccurences.boolValue ) {
                 const randomResponse = getRandomResponse();
 				numberOfLetters = countLetters(randomResponse);
 				await new Promise(resolve => setTimeout(resolve, 70 * numberOfLetters));
@@ -193,96 +188,92 @@ async function checkJsonQuestions(question, jsonCategories) {
     return false; // No matches found in questions
 }
 
-// Helper function to go through all questions
-async function checkJsonQuestionsWordsOccurences(question, jsonCategories) {
+// Functionality to get best answer by matching with keyword combinations / single keywords
+async function findBestAnswer(question, keywordsCategories) {
     try {
-	    let bestMatch = { occurrences: 0, answer: null };
-        for (const category of jsonCategories) {
-            const response = await fetch("./" + category + ".json");
+        let bestAnswer = null;
+        let bestMatchScore = 0;
+        for (const keyword of keywordsCategories) {
+            const response = await fetch("./" + keyword + ".json");
             const jsonArray = await response.json();
             for (const jsonField of jsonArray) {
-                const occurrences = checkQuestionMatch(question, jsonField["question"]);
-                if (occurrences > bestMatch.occurrences) {
-                    bestMatch.occurrences = occurrences;
-                    bestMatch.answer = jsonField["answer"];
-                } else if (jsonField["question"].toLowerCase().includes(question)) {
-                    // Handle the case where the question contains the specified keyword
-                    simulateBotTyping(50, jsonField["answer"]);
-                    let numberOfLetters = countLetters(jsonField["answer"]);
-                    const result = [numberOfLetters, true];
-                    result.intValue = result[0];
-                    result.boolValue = result[1];
-                    return result; // Match found => return true immediately + letter count
+                const keywordCombinations = jsonField["keyword"].toLowerCase().split('+');
+                const userQuestionCleaned = cleanStringsKeepSpaces(question.toLowerCase());
+                let match = false; // Assume no match
+                for (const keywordInCombinations of keywordCombinations) {				// first go through the combinations
+					const regex = new RegExp(`\\b${keywordInCombinations}\\b`);
+					if (regex.test(userQuestionCleaned)) {
+						match = true;
+						break;
+					}
+				}
+				if (!match) {															// if no matches happen, go through single keywords and match
+					for (const keywordInCombinations of keywordCombinations) {			
+						let keywordArray = keywordInCombinations.split(" ");
+						for (const keyword of keywordArray) {
+							const regex = new RegExp(`\\b${keyword}\\b`);
+							if (regex.test(userQuestionCleaned)) {
+								match = true;
+								break;
+							}
+						}
+					}
+				}
+                if (match) {															// if match, create a match score
+                    const matchScore = checkQuestionMatch(question, jsonField["keyword"]);
+                    if (matchScore > bestMatchScore) {
+                        bestMatchScore = matchScore;
+                        bestAnswer = jsonField["answer"];
+						console.log("Best answer:" + bestAnswer);
+                    }
                 }
             }
-			response.close;
         }
-		console.log("Current question: " + question);
-		if (bestMatch.answer === null) {
-			console.log("Could not find answer in all questions.");
-		}
-		else {
-			console.log("Final answer: " + bestMatch.answer);
-            simulateBotTyping(50, bestMatch.answer);
-            let numberOfLetters = countLetters(bestMatch.answer);
+        if (bestAnswer) {																// if best answer is found, return it.
+            simulateBotTyping(50, bestAnswer);
+            let numberOfLetters = countLetters(bestAnswer);
             const result = [numberOfLetters, true];
             result.intValue = result[0];
             result.boolValue = result[1];
-            return result; // Match found => return true immediately + letter count
-        }
-    } catch (error) {
-        console.error("Error loading or parsing JSON:", error);
-        return false; // Return false in case of error
-    }
-    return false; // No matches found in questions
-}
-
-// Helper function to go through all keywords
-async function checkJsonKeywords(question, keywordsCategories) {
-    try {
-		for (const keyword of keywordsCategories) {
-			const response = await fetch("./" + keyword + ".json");
-			const jsonArray = await response.json();
-			for (const jsonField of jsonArray) {
-				const keywordRegex = new RegExp(`\\b${jsonField["keyword"]}\\b`, 'i');
-				if (keywordRegex.test(question)) {
-					simulateBotTyping(50, jsonField["answer"]);
-					let numberOfLetters = countLetters(jsonField["answer"]);
-					const result = [numberOfLetters, true];
-					result.intValue = result[0];
-					result.boolValue = result[1];
-					return result; // Match found => return true immediately + letter count
-				}
-			}
+            return result;
+        } else {
+			const result = [0, false];
 		}
     } catch (error) {
         console.error("Error loading or parsing JSON:", error);
-        return false; // Return false in case of error
     }
-    return false; // No matches found in keywords
+    return [0, false];
 }
 
-// Helper function to check occurrences of words
-function checkQuestionMatch(userQuestion, jsonQuestion) {
-	userQuestion = cleanStringsKeepSpaces(userQuestion);
-	jsonQuestion = cleanStringsKeepSpaces(jsonQuestion);
-    const userWords = userQuestion.toLowerCase().split(" ");
-    const jsonWords = jsonQuestion.toLowerCase().split(" ");
+function checkQuestionMatch(userQuestion, keywordCombinationsString) {
+    userQuestion = cleanStringsKeepSpaces(userQuestion.toLowerCase());
     let occurrences = 0;
-    userWords.forEach(userWord => {
-        if (jsonWords.includes(userWord)) {
+	// Check combinations of keywords
+    keywordCombinationsString.split('+').forEach(keywordCombo => {
+        const comboKeywordsArray = keywordCombo.split('+');
+        let comboFound = true;
+        
+        comboKeywordsArray.forEach(keyword => {
+            if (!userQuestion.includes(keyword)) {
+                comboFound = false;
+            }
+        });
+        if (comboFound) {
             occurrences++;
         }
     });
-	if (occurrences > 0) {
-		// console.log(`User words: ${userWords}`);
-		// console.log(`JSON words: ${jsonWords}`);
-		// console.log(`Occurrences: ${occurrences}`);
-		return occurrences;
-	}
-	else {
-		return -1;
-	}
+    // Check single keywords
+    keywordCombinationsString.split('+').forEach(keyword => {
+        const cleanedKeywordArray = keyword.split(" ");
+		cleanedKeywordArray.forEach(cleanedKeyword => {
+			const regex = new RegExp(`\\b${cleanedKeyword}\\b`, 'i');			
+			if (regex.test(userQuestion)) {
+				occurrences++;
+			}
+		});
+    });
+	// return occurences for a ranking system
+    return occurrences;
 }
 
 // Helper function to count letters

@@ -1,47 +1,15 @@
 [
 	{
-		"keyword": "assault rifle",
+		"keyword": "assault rifle+AR+Assault weapons+automatic rifle+automatic gun+auto+full auto+fullauto+automatic weapon+full auto weapon+full auto",
 		"answer": "Based on damage, in the Vanilla version the best assault rifle is the AUR AX."
 	},
 	{
-		"keyword": "AR",
-		"answer": "Based on damage, in the Vanilla version the best assault rifle is the AUR AX."
+		"keyword": "gun+firearm+firearms+guns+best gun",
+		"answer": "There are multiple good weapons in the game. Please specify the gun's caliber as well in order to provide an accurate answer."
 	},
 	{
-		"keyword": "gun",
-		"answer": "There are multiple good weapons in the game, but as an overall comparison, the M4A1 is among the best options."
-	},
-	{
-		"keyword": "Firearm",
-		"answer": "There are multiple good weapons in the game, but as an overall comparison, the M4A1 is among the best options."
-	},
-	{
-		"keyword": "Rifle",
+		"keyword": "Rifle+rifles+Semi-automatic rifles+semi-auto gun+semi-auto rifle+Semi-automatic rifle+sar+semigun+semi weapon+semi rifle+Semi-automatic gun",
 		"answer": "Based on damage, in the Vanilla version the best rifle is the SK 5966."
-	},
-	{
-		"keyword": "Firearms",
-		"answer": "There are multiple good weapons in the game, but as an overall comparison, the M4A1 is among the best options."
-	},
-	{
-		"keyword": "Rifles",
-		"answer": "Based on damage, in the Vanilla version the best rifle is the SK 5966, followed by BK 18."
-	},
-	{
-		"keyword": "Assault weapons",
-		"answer": ""
-	},
-	{
-		"keyword": "Semi-automatic rifles",
-		"answer": ""
-	},
-	{
-		"keyword": "Automatic rifles",
-		"answer": ""
-	},
-	{
-		"keyword": "Gun control",
-		"answer": ""
 	},
 	{
 		"keyword": "Magazine capacity",
@@ -60,15 +28,7 @@
 		"answer": ""
 	},
 	{
-		"keyword": "Select-fire rifles",
-		"answer": ""
-	},
-	{
 		"keyword": "Weapon accessories",
-		"answer": ""
-	},
-	{
-		"keyword": "Tactical rifles",
 		"answer": ""
 	},
 	{
