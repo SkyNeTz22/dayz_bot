@@ -88,8 +88,8 @@ async function handleUserInput() {
 		return;
 	}
     isBotTyping = true;
-    const jsonCategoriesFiles = ["ammo_questions", "general_questions", "guns_questions", "sickness_questions"];
-    const jsonKeywordsFiles = ["keywords_ammo", "keywords_ar", "keywords_sickness"];
+    const jsonCategoriesFiles = ["ammo_questions", "general_questions", "guns_questions", "medical_questions"];
+    const jsonKeywordsFiles = ["keywords_ammo", "keywords_ar", "keywords_medical"];
     let question = userInput.value.trim();
 	// Look for answers based on question
     if (question !== "") {
@@ -259,22 +259,23 @@ function checkQuestionMatch(userQuestion, keywordCombinationsString) {
     let occurrences = 0;
 	// Check combinations of keywords
     keywordCombinationsString.split('+').forEach(keywordCombo => {
+		if (userQuestion === keywordCombo) {
+			return 100;
+		}
         const comboKeywordsArray = keywordCombo.split('+');
-        let comboFound = true;
-        
         comboKeywordsArray.forEach(keyword => {
-            if (!userQuestion.includes(keyword)) {
-                comboFound = false;
+            if (userQuestion.includes(keyword)) {
+				occurrences++;
             }
         });
-        if (comboFound) {
-            occurrences++;
-        }
     });
     // Check single keywords
     keywordCombinationsString.split('+').forEach(keyword => {
         const cleanedKeywordArray = keyword.split(" ");
 		cleanedKeywordArray.forEach(cleanedKeyword => {
+			if (userQuestion === cleanedKeyword) {
+				return 100;
+			}
 			const regex = new RegExp(`\\b${cleanedKeyword}\\b`, 'i');			
 			if (regex.test(userQuestion)) {
 				occurrences++;
