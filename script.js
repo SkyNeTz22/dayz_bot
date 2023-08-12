@@ -29,10 +29,10 @@ function getRandomResponse() {
     return randomResponses[randomIndex];
 }
 
-window.onload = function () {
-	simulateBotTyping(50, getRandomGreeting());
-	new Promise(resolve => setTimeout(resolve, 1000));
-}
+window.onload = async function () {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    simulateBotTyping(50, getRandomGreeting());
+};
 
 // Function for menu questions
 function askBot(question) {
@@ -51,7 +51,6 @@ async function handleUserInput() {
     if (containsInappropriateKeyword) {
         // Delete the inappropriate message and display a placeholder message
         displayUserMessage("Message deleted", "color: red; font-weight: bold;" );
-        displayUserMessage("Message deleted", "color: red; font-weight: bold;" );
         userInput.value = ""; // Clear the input field
         isBotTyping = true;
         const inappropriateResponses = [
@@ -68,24 +67,28 @@ async function handleUserInput() {
         return;
     }
     // Handle greetings
-    if (userMessage.includes("hi") || userMessage.includes("hello") || userMessage.includes("hey") || userMessage.includes("zup") || userMessage.includes("what's up")) {
-        const randomGreeting = getRandomGreeting();
-        displayUserMessage(userMessage);
-        await simulateBotTyping(50, randomGreeting);
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        isBotTyping = false;
-        userInput.value = ""; // Clear the input field
-        return;
-    }
+	const greetingRegex = new RegExp(`\\b(hi|hello|hey|sup|what's up)\\b`, 'i');	
+	if (greetingRegex.test(userMessage)) {
+		const randomGreeting = getRandomGreeting();
+		displayUserMessage(userMessage);
+		simulateBotTyping(50, randomGreeting).then(() => {
+			return new Promise(resolve => setTimeout(resolve, 1000));
+		}).then(() => {
+			isBotTyping = false;
+			userInput.value = ""; // Clear the input field
+		});
+		return;
+	}
     isBotTyping = true;
     const jsonCategoriesFiles = ["ammo_questions", "general_questions", "guns_questions", "sickness_questions"];
     const jsonKeywordsFiles = ["keywords_ammo", "keywords_ar", "keywords_sickness"];
-    const question = userInput.value.trim();
+    let question = userInput.value.trim();
 	// Look for answers based on question
     if (question !== "") {
         displayUserMessage(question);
         userInput.value = "";
         let numberOfLetters = 0;
+		question = cleanStringsKeepSpaces(question).toLowerCase();
         try {
 			// First check questions
 			let checkQuestions = await checkJsonQuestions(question, jsonCategoriesFiles);
@@ -134,7 +137,7 @@ function displayUserMessage(message, style = "") {
 
 // Function to display output
 function displayBotMessage(message) {
-    const botMessage =`<div class="bot-message">
+    const botMessage = `<div class="bot-message">
     <img src="bot.png" alt="Robot" class="bot-avatar">
     <span class="bot-text">${message}</span>
 </div>`;
@@ -171,7 +174,7 @@ async function checkJsonQuestions(question, jsonCategories) {
             const response = await fetch(category + ".json");
             const jsonArray = await response.json();
             for (const jsonField of jsonArray) {
-                if (question.toLowerCase() === jsonField["question"].toLowerCase()) {
+                if (question === cleanStringsKeepSpaces(jsonField["question"]).toLowerCase()) {
                     simulateBotTyping(50, jsonField["answer"]);
 					let numberOfLetters = countLetters(jsonField["answer"]);
 					const result = [numberOfLetters, true];
@@ -198,11 +201,10 @@ async function findBestAnswer(question, keywordsCategories) {
             const jsonArray = await response.json();
             for (const jsonField of jsonArray) {
                 const keywordCombinations = jsonField["keyword"].toLowerCase().split('+');
-                const userQuestionCleaned = cleanStringsKeepSpaces(question.toLowerCase());
                 let match = false; // Assume no match
                 for (const keywordInCombinations of keywordCombinations) {				// first go through the combinations
 					const regex = new RegExp(`\\b${keywordInCombinations}\\b`);
-					if (regex.test(userQuestionCleaned)) {
+					if (regex.test(question)) {
 						match = true;
 						break;
 					}
@@ -212,7 +214,7 @@ async function findBestAnswer(question, keywordsCategories) {
 						let keywordArray = keywordInCombinations.split(" ");
 						for (const keyword of keywordArray) {
 							const regex = new RegExp(`\\b${keyword}\\b`);
-							if (regex.test(userQuestionCleaned)) {
+							if (regex.test(question)) {
 								match = true;
 								break;
 							}
@@ -246,7 +248,6 @@ async function findBestAnswer(question, keywordsCategories) {
 }
 
 function checkQuestionMatch(userQuestion, keywordCombinationsString) {
-    userQuestion = cleanStringsKeepSpaces(userQuestion.toLowerCase());
     let occurrences = 0;
 	// Check combinations of keywords
     keywordCombinationsString.split('+').forEach(keywordCombo => {
