@@ -15,3 +15,14 @@
 - User History: If you have access to user history, you could take into account previous interactions and preferences to tailor the ranking.
 - User Intent: Try to understand the user's intent behind the question. This can involve more advanced natural language processing techniques to determine the purpose of the question.
 - Machine Learning: Consider using machine learning techniques to learn from user interactions and improve the ranking over time.
+
+question == question ? yes : no
+yes => display answer
+no => next step : keywords matching in the question. most keywords occurences => gold ?
+
+earn to start fires using matches, lighters, or other ignition sources. -> how to start fire?
+
+Creature: Fire starting and cooking ? - no answer
+Creature: Fire starting and cooking? - answer
+
+fire starting (with or without ?) => a part of the question may be present, therefore, look for any inclusions if any)
