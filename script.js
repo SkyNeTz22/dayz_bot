@@ -29,10 +29,10 @@ function getRandomResponse() {
     return randomResponses[randomIndex];
 }
 
-window.onload = function () {
-	simulateBotTyping(50, getRandomGreeting());
-	new Promise(resolve => setTimeout(resolve, 1000));
-}
+window.onload = async function () {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    simulateBotTyping(50, getRandomGreeting());
+};
 
 // Function for menu questions
 function askBot(question) {
@@ -50,7 +50,6 @@ async function handleUserInput() {
     const containsInappropriateKeyword = inappropriateKeywords.some(keyword => userMessage.toLowerCase().includes(keyword.toLowerCase()));
     if (containsInappropriateKeyword) {
         // Delete the inappropriate message and display a placeholder message
-        displayUserMessage("Message deleted", "color: red; font-weight: bold;" );
         displayUserMessage("Message deleted", "color: red; font-weight: bold;" );
         userInput.value = ""; // Clear the input field
         isBotTyping = true;
@@ -134,7 +133,7 @@ function displayUserMessage(message, style = "") {
 
 // Function to display output
 function displayBotMessage(message) {
-    const botMessage =`<div class="bot-message">
+    const botMessage = `<div class="bot-message">
     <img src="bot.png" alt="Robot" class="bot-avatar">
     <span class="bot-text">${message}</span>
 </div>`;
