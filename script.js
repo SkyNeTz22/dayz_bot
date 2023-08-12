@@ -14,7 +14,7 @@ const greetings = [
     "Hey, survivor! Ready to dive into some DayZ knowledge?",
     "Greetings! What DayZ questions do you have?",
 ];
-const inappropriateKeywords = ["porn", "sex", "racism", "politics", "jew", "nigger", "idiot", "morron", "retard", "cp", "shut up", "stfu", "fuck off", "bite me", "suck my dick", "dick", "pussy", "nigga", "nigg", "N word", "dickhead", "motherfucker", "dick head", "mother fucker", "asshole", "bastard", "moron", "idiot"];
+const inappropriateKeywords = ["porn", "sex", "racism", "politics", "jew", "nigger", "idiot", "morron", "retard", "cp", "shut up", "stfu", "fuck off", "bite me", "suck my dick", "dick", "pussy", "nigga", "nigg", "N word", "dickhead", "motherfucker", "dick head", "mother fucker", "asshole", "bastard", "moron", "idiot", "anal"];
 let isBotTyping = false;
 
 // Function to get random greeting from the array
@@ -47,7 +47,15 @@ async function handleUserInput() {
     }
     const userMessage = userInput.value.trim().toLowerCase();
     // Check for inappropriate keywords
-    const containsInappropriateKeyword = inappropriateKeywords.some(keyword => userMessage.toLowerCase().includes(keyword.toLowerCase()));
+	const keywordRegex = new RegExp(inappropriateKeywords.map(keyword => `\\b${keyword}\\b`).join('|'), 'i');			// | - stands for an OR inside the regex, you can see that down below with hi, hello etc.
+	let containsInappropriateKeyword = false;
+	for (const keyword of inappropriateKeywords) {
+		const keywordRegex = new RegExp(`\\b${keyword}\\b`, 'i');
+		if (keywordRegex.test(userMessage)) {
+			containsInappropriateKeyword = true;
+			break;
+		}
+	}
     if (containsInappropriateKeyword) {
         // Delete the inappropriate message and display a placeholder message
         displayUserMessage("Message deleted", "color: red; font-weight: bold;" );
