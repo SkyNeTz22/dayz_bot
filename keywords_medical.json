@@ -1,0 +1,62 @@
+[
+	{
+		"keyword": "sickness",
+		"answer": "Here is a list of the threats: Cholera, Cold, Influenza (Flu), Salmonella, Chemical Poisoning, Heart Attack, Hemolytic Reaction, Brain Disease (Permanent)."
+	},
+	{
+		"keyword": "disease",
+		"answer": "Here is a list of the threats: Cholera, Cold, Influenza (Flu), Salmonella, Chemical Poisoning, Heart Attack, Hemolytic Reaction, Brain Disease (Permanent)."
+	},
+	{
+		"keyword": "diseases",
+		"answer": "Here is a list of the threats: Cholera, Cold, Influenza (Flu), Salmonella, Chemical Poisoning, Heart Attack, Hemolytic Reaction, Brain Disease (Permanent)."
+	},
+	{
+		"keyword": "laughing+laugh+maniac+psycho+psycho laugh+maniac laugh",
+		"answer": "Uncontrollable Laughter is a disease symptom in DayZ that presents after consuming human meat. The disease is called Brain Damage."
+	},	
+	{
+		"keyword": "Salmonella+Salmonellosis",
+		"answer": "It is a disease and the cause of Salmonella is eating uncooked or raw meat. The symptom is vomiting and the treatment is Charcoal Tablets."
+	},
+	{
+		"keyword": "Charcoal tablets+charcoal+charcoal tablet",
+		"answer": "Used to refill Gas Mask Filters and cure cure poisoning such as food poisoning or from drinking gasoline, alcoholic tincture, or disinfectant spray."
+	},
+	{
+		"keyword": "Tetracycline Pills+tetra+tetra pill+tetracycline+tetracycline pill+tetras+tetra pills",
+		"answer": "Used as an antibiotic to treat most diseases."
+	},
+	{
+		"keyword": "Epinephrine Auto-Injector+epipen+epinephrine+epinefrine+epipen injector+epipenephrine injector",
+		"answer": "Used to reset your shock level. Best used when close to or already falling unconscious."
+	},
+	{
+		"keyword": "Morphine Auto-Injector+morphine",
+		"answer": "Used when you have low health to negate some of the negatives effects for a brief time."
+	},
+	{
+		"keyword": "Multivitamin Pills+multivitamin+multi vitamin+vitamin+vitamins+multivitamins+multivitamin pill+vitamin pill+vitamin pills",
+		"answer": "Used to boost your immune system."
+	},
+	{
+		"keyword": "IV Starter Kit+iv start kit+iv starter+starter kit+iv+iv kit",
+		"answer": "Used to inject liquids into your body. To be used with a Blood Bag or Saline Bag."
+	},
+	{
+		"keyword": "Saline Bag+saline",
+		"answer": "Used to speed up natural blood recovery."
+	},
+	{
+		"keyword": "Codeine Pills+codeine+codeine pill",
+		"answer": "Used to treat pain from minor physical injuries."
+	},
+	{
+		"keyword": "Blood Collection Kit+blood kit+blood collection",
+		"answer": "Used to collect blood from yourself or another survivor which turns it into a Blood Bag for use later with an IV Starter Kit."
+	},
+	{
+		"keyword": "Blood bag+bloodbag+bloodbags+blood bags",
+		"answer": "Used to replenish blood. Needs to be used with an IV Starter Kit."
+	}
+]
