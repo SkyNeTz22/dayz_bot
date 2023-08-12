@@ -25,4 +25,7 @@ earn to start fires using matches, lighters, or other ignition sources. -> how t
 Creature: Fire starting and cooking ? - no answer
 Creature: Fire starting and cooking? - answer
 
+Creature: Laugh?		- no answer
+Creature: Laughing?		- answer
+
 fire starting (with or without ?) => a part of the question may be present, therefore, look for any inclusions if any)
