@@ -300,3 +300,88 @@ function cleanStringsKeepSpaces(input) {
     // Use a regular expression to replace any characters that are not letters or spaces
     return input.replace(/[^a-zA-Z\s]/g, '');
 }
+
+
+
+
+const popoverButton = document.getElementById("popoverButton");
+const popoverContent = document.getElementById("popoverContent");
+
+popoverButton.addEventListener("click", () => {
+    popoverContent.classList.toggle("show");
+});
+
+
+const reportButton = document.getElementById("reportButton");
+
+reportButton.addEventListener("click", () => {
+    const bugReportWindow = window.open(
+        "report_form.html",
+        "Bug Report",
+        "width=700,height=500,left=" + (window.innerWidth / 2 - 200) + ",top=" + (window.innerHeight / 2 - 250)
+    );
+    bugReportWindow.focus();
+});
+
+const express = require("express");
+const path = require("path");
+const fs = require("fs");
+const app = express();
+const port = 3000;
+
+app.use(express.urlencoded({ extended: true }));
+
+app.post("/submit", (req, res) => {
+    const bugDescription = req.body.bugDescription;
+
+    // Check for inappropriate words
+    const inappropriateKeywords = ["porn", "sex", "racism", "politics", "jew", "nigger", "idiot", "morron", "retard", "cp", "shut up", "stfu", "fuck off", "bite me", "suck my dick", "dick", "pussy", "nigga", "nigg", "N word", "dickhead", "motherfucker", "dick head", "mother fucker", "asshole", "bastard", "moron", "idiot", "anal"];
+    const containsInappropriateKeyword = inappropriateKeywords.some(keyword => bugDescription.includes(keyword));
+
+    if (containsInappropriateKeyword) {
+        res.status(400).send("Inappropriate words not accepted");
+    } else {
+        // Save the bug report to a text file
+        const filePath = path.join(__dirname, "bug_reports.txt");
+        fs.appendFile(filePath, bugDescription + "\n", (err) => {
+            if (err) {
+                res.status(500).send("Error saving bug report");
+            } else {
+                res.status(200).send("Bug report submitted successfully");
+            }
+        });
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
+
+
+const bugReportForm = document.getElementById("bugReportForm");
+
+bugReportForm.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const reportDetails = document.getElementById("reportDetails").value;
+
+    try {
+        const response = await fetch("/submitReport", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: `reportDetails=${encodeURIComponent(reportDetails)}`,
+        });
+
+        if (response.ok) {
+            alert("Bug report submitted successfully.");
+            // Clear the form or close the modal
+        } else {
+            alert("An error occurred while submitting the bug report.");
+        }
+    } catch (error) {
+        console.error("Error submitting bug report:", error);
+        alert("An error occurred while submitting the bug report.");
+    }
+});

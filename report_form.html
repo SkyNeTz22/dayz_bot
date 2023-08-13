@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <title>Bug Report</title>
+    <style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .bug-report {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    form {
+        width: 80%;
+        max-width: 400px;
+    }
+
+    /* Include any additional CSS styles here */
+</style>
+
+</head>
+<body class="bg-light-subtle">
+    <div class="bug-report">
+        <form id="bugReportForm">
+            <textarea id="bugDescription" rows="4" cols="50" placeholder="Describe the bug/error..."></textarea>
+            <p id="inappropriateError" style="color: red; display: none;"><strong>Inappropriate words not accepted</strong></p>
+            <button class="btn btn-outline-secondary icon-link icon-link-hover" type="submit">Submit Report</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("bugReportForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const bugDescription = document.getElementById("bugDescription").value.toLowerCase();
+            const inappropriateKeywords = ["porn", "sex", "racism", "politics"];
+            const containsInappropriateKeyword = inappropriateKeywords.some(keyword => bugDescription.includes(keyword));
+            if (containsInappropriateKeyword) {
+                document.getElementById("inappropriateError").style.display = "block";
+            } else {
+
+                window.close();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -52,9 +52,40 @@
     margin-right: 5px; 
 }
 
-.blackout {
-    background-color: black;
-    opacity: 0.7;
-    transition: opacity 0.5s;
-    pointer-events: none;
+.chatbubble {
+    position: relative;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.popover-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.popover-content {
+    display: none;
+    position: absolute;
+    top: 10px; /* Adjusted to be 10px lower */
+    left: 40px; /* Adjusted to be 10px from the side */
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+.report-button {
+    font-size: 8px; /* Adjust the font size as needed */
+    padding: 4px 8px; /* Adjust the padding as needed */
+}
+
+.show {
+    display: block;
 }
