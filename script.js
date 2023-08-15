@@ -1,6 +1,9 @@
 const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
+const popoverButton = document.getElementById("popoverButton");
+const popoverContent = document.getElementById("popoverContent");
+const reportButton = document.getElementById("reportButton");
 
 const randomResponses = [
     "I'm here to assist you. If I fail to do so, please use the \"REPORT\" button so the issue can be fixed!",
@@ -301,18 +304,9 @@ function cleanStringsKeepSpaces(input) {
     return input.replace(/[^a-zA-Z\s]/g, '');
 }
 
-
-
-
-const popoverButton = document.getElementById("popoverButton");
-const popoverContent = document.getElementById("popoverContent");
-
 popoverButton.addEventListener("click", () => {
     popoverContent.classList.toggle("show");
 });
-
-
-const reportButton = document.getElementById("reportButton");
 
 reportButton.addEventListener("click", () => {
     const bugReportWindow = window.open(
