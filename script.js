@@ -324,19 +324,6 @@ reportButton.addEventListener("click", () => {
 });
 
 
-const Spellchecker = require("hunspell-spellchecker");
 
-// Initialize the spellchecker with a language dictionary
-const spellchecker = new Spellchecker();
-spellchecker.use(new Spellchecker('en_US'));
-
-function handleUserInput() {
-    const userMessage = userInput.value.trim().toLowerCase();
-    
-    // Get suggestions for misspelled words
-    const suggestions = spellchecker.suggest(userMessage);
-
-    // Process suggestions or other logic...
-}
 
 
