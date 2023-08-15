@@ -30,30 +30,33 @@
 
     /* Include any additional CSS styles here */
 </style>
-
 </head>
-<body class="bg-light-subtle">
+<body class="bg-dark">
     <div class="bug-report">
         <form id="bugReportForm">
             <textarea id="bugDescription" rows="4" cols="50" placeholder="Describe the bug/error..."></textarea>
             <p id="inappropriateError" style="color: red; display: none;"><strong>Inappropriate words not accepted</strong></p>
-            <button class="btn btn-outline-secondary icon-link icon-link-hover" type="submit">Submit Report</button>
+            <button class="btn btn-outline-secondary icon-link icon-link-hover" type="submit" id="submit">Submit Report
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
+                </svg>
+            </button>
         </form>
     </div>
 
     <script>
         document.getElementById("bugReportForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            const bugDescription = document.getElementById("bugDescription").value.toLowerCase();
-            const inappropriateKeywords = ["porn", "sex", "racism", "politics"];
-            const containsInappropriateKeyword = inappropriateKeywords.some(keyword => bugDescription.includes(keyword));
-            if (containsInappropriateKeyword) {
-                document.getElementById("inappropriateError").style.display = "block";
-            } else {
+    event.preventDefault();
+    const bugDescription = document.getElementById("bugDescription").value.toLowerCase();
+    const inappropriateKeywords = ["porn", "sex", "racism", "politics"];
+    const containsInappropriateKeyword = inappropriateKeywords.some(keyword => bugDescription.includes(keyword));
+    if (containsInappropriateKeyword) {
+        document.getElementById("inappropriateError").style.display = "block";
+    } else {
 
-                window.close();
-            }
-        });
+        window.close();
+    }
+});
     </script>
 </body>
 </html>
