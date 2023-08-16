@@ -8,28 +8,6 @@
     <title>Chatbot Pre-Screen</title>
 </head>
 <body class="bg-dark position-absolute top-50 start-50 translate-middle">
-    <script>
-       document.addEventListener("DOMContentLoaded", function () {
-    const agreeCheckbox = document.getElementById("agreeCheckbox");
-    const continueButton = document.getElementById("continueButton");
-
-    continueButton.addEventListener("click", () => {
-        if (agreeCheckbox.checked) {
-            // Set a flag in local storage to indicate agreement
-            localStorage.setItem("agreedToTerms", "true");
-            // Navigate to the chatbot interface
-            window.location.href = "index.html"; // Replace with the actual path to your chatbot interface
-        } else {
-            alert("Please agree to the terms and conditions to proceed.");
-        }
-    });
-
-    const hasAgreedToTerms = localStorage.getItem("agreedToTerms");
-    if (!hasAgreedToTerms) {
-        // Don't need to redirect to the pre-screen page, as this script is already on that page
-    }
-});
-    </script>
     <div class="terms">
     <h1 class="text-light">Terms and Conditions</h1>
     
@@ -52,5 +30,6 @@
         <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
     </svg></button>
 </div>
+<script src="pre_screen.js"></script>
 </body>
 </html>

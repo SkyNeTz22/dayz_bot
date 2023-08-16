@@ -1,3 +1,10 @@
+const hasAgreedToTerms = localStorage.getItem("agreedToTerms");
+        if (!hasAgreedToTerms) {
+            // Redirect back to the pre-screen page if terms are not agreed
+            window.location.href = "pre_screen.html";
+        }
+
+
 const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
