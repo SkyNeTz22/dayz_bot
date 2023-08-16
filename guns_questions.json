@@ -134,5 +134,13 @@
 	{
 		"question": "Best 7.62 gun?",
 		"answer": "Depends which 7.62 caliber you are referring to. If you mean 7.62x39mm, then best to use is the KA-M or alternatively 7.62x54mmR, then VSD. However, it's worth mentioning that the Mosin is more common than the VSD."
+	},
+	{
+		"question": "Weapon categories?",
+		"answer": "Weapon categories in DayZ: melee, Handguns, Shotguns, Submachine Guns, Assault Rifles, Battle Rifles, Bolt-Action Rifles, Break-Action Rifles, Lever-Action Rifles, Marksman Rifles, Semi-Automatic Rifles, and Explosives."
+	},
+	{
+		"question": "Attachement types?",
+		"answer": "Attachements in DayZ: buttstocks, Handguards, Scopes, Rail, Muzzles, Wraps, Bayonets, Underslung."
 	}
 ]

@@ -34,5 +34,13 @@
 	{
 		"keyword": "Ammunition types",
 		"answer": ""
+	},
+	{
+		"keyword": "Weapon cat+weapon category+weapon categories+gun category+category of guns+categories for weapons+categories for guns+guns categories+guns cat",
+		"answer": "Weapon categories in DayZ: melee, Handguns, Shotguns, Submachine Guns, Assault Rifles, Battle Rifles, Bolt-Action Rifles, Break-Action Rifles, Lever-Action Rifles, Marksman Rifles, Semi-Automatic Rifles, and Explosives."
+	},
+	{
+		"keyword": "attachements+attachements in dayz+weapon att+weapons attachements+gun attachements+gun mods+weapon mods+mods for weapons+mods for guns",
+		"answer": "Attachements in DayZ: buttstocks, Handguards, Scopes, Rail, Muzzles, Wraps, Bayonets, Underslung."
 	}
 ]
