@@ -101,7 +101,7 @@
 	},
 	{
 		"question": "What is the Amphibia S in DayZ Standalone?",
-		"answer": "The Amphibia S is a compact semi-automatic pistol that can be chambered for both 9mm and .380 ACP ammunition."
+		"answer": "The Amphibia S is a compact semi-automatic pistol that can be chambered for both 9x19mm and .380 ACP ammunition."
 	},
 	{
 		"question": "Where can you find the Amphibia S in DayZ Standalone?",
@@ -129,7 +129,7 @@
 	},
 	{
 		"question": "Best 5.56 gun?",
-		"answer": "Based on damage, in the Vanilla version the best assault rifle that uses 5.56 is the AUR AX."
+		"answer": "Based on damage, in the Vanilla version the best assault rifle that uses 5.56x45mm is the AUR AX."
 	},
 	{
 		"question": "Best 7.62 gun?",
@@ -142,5 +142,9 @@
 	{
 		"question": "Attachement types?",
 		"answer": "Attachements in DayZ: buttstocks, Handguards, Scopes, Rail, Muzzles, Wraps, Bayonets, Underslung."
-	}
+	},
+	{
+		"question": "Best 5.45 gun?",
+		"answer": "Based on damage, in the Vanilla version the best assault rifle that uses 5.45x39mm is the KA-74."
+	},
 ]
