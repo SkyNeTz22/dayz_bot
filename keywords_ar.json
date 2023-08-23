@@ -12,8 +12,16 @@
 		"answer": "Based on damage, in the Vanilla version the best rifle is the SK 5966."
 	},
 	{
-		"keyword": "Magazine capacity",
-		"answer": ""
+		"keyword": "Best 5.56x45mm gun+5.56x45mm gun+556+5.56+556 gun+5.56gun+55.6 gun+55.6+best 556 gun+best 5.56 gun",
+		"answer": "Based on damage, in the Vanilla version the best assault rifle that uses 5.56x45mm is the AUR AX."
+	},
+	{
+		"keyword": "Best .308 gun+best 308 gun+308 gun+308+.308+.308 gun+best 3o8 gun+best three o eight gun+best .308 WIN gun+best 308 WIN gun+308 WIN gun+308 gun+ gun 308+308 gun",
+		"answer": "Based on damage, in the Vanilla version the best battle rifle that uses .308 WIN is the LAR."
+	},
+	{
+		"keyword": "Best 7.62x39mm gun+best 762 39 gun+7.62x39mm gun+7.62x39mm assault rifle best+7.62x39mm AR best",
+		"answer": "Based on damage, in the Vanilla version the best assault rifle that uses 7.62x39mm is the KAM."
 	},
 	{
 		"keyword": "Caliber",

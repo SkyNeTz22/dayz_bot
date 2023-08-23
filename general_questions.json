@@ -86,18 +86,18 @@
 	{
 		"question": "How do you find loot in DayZ?",
 		"answer": "Scavenging supplies in DayZ are all about finding the gear and weapons you need to ensure your survival. There are tons of options to fit yourself out with so that you can prepare for any situation you come across, but that also means there are many kinds of guns for players to learn and know about."
-  },
-  {
+	},
+	{
 		"question": "How do I find weapons?",
-		"answer": "Head to helicopter crashes, military bases, police stations, and gun houses to get some weapons in the game."
+		"answer": "There are various ways of obtaining weapons. Both firearms and melee weapons can be obtained from all around the world, from a random house, a barn or a warehouse to police stations, military bases and even heli crashes. Or, alternatively, from other Survivors."
 	},
 	{
 		"question": "What is DayZ?",
 		"answer": "DayZ is a multiplayer-only survival video game developed and published by Bohemia Interactive. It is the standalone game based on the mod of the same name for ARMA 2. Following a five-year-long early access period for Windows, the game was officially released in December 2018, and was released for the Xbox One and PlayStation 4 in 2019. The game places the player in the fictional post-Soviet Republic of Chernarus, the original setting of ARMA 2, where a mysterious plague has turned most of the population into violent infected. As a survivor, the player must scavenge the world for food, water, weapons and medicine, while killing or avoiding the infected, and killing, avoiding, or cooperating with other players in an effort to survive the outbreak. DayZ began development in 2012 when the mod's creator, Dean Hall, joined Bohemia Interactive to commence work on the standalone version of the game. The development has been focused on altering the engine to suit the game's needs, developing a working client-server architecture, and introducing new features like diseases and a better inventory system. The game sold over three million copies during its early access phase."
 	},
 	{
-		"question": "",
-		"answer": ""
+		"question": "What is DayZ Standalone?",
+		"answer": "DayZ is a multiplayer-only survival video game developed and published by Bohemia Interactive. It is the standalone game based on the mod of the same name for ARMA 2. Following a five-year-long early access period for Windows, the game was officially released in December 2018, and was released for the Xbox One and PlayStation 4 in 2019. The game places the player in the fictional post-Soviet Republic of Chernarus, the original setting of ARMA 2, where a mysterious plague has turned most of the population into violent infected. As a survivor, the player must scavenge the world for food, water, weapons and medicine, while killing or avoiding the infected, and killing, avoiding, or cooperating with other players in an effort to survive the outbreak. DayZ began development in 2012 when the mod's creator, Dean Hall, joined Bohemia Interactive to commence work on the standalone version of the game. The development has been focused on altering the engine to suit the game's needs, developing a working client-server architecture, and introducing new features like diseases and a better inventory system. The game sold over three million copies during its early access phase."
 	},
 	{
 		"question": "",
