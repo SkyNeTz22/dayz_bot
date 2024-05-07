@@ -1,7 +1,11 @@
 function checkTerms() {
-    const hasAgreedToTerms = localStorage.getItem("agreedToTerms");
-    if (!hasAgreedToTerms) {
-        window.location.href = "pre_screen.html";
+    try {
+        if (!localStorage.getItem("agreedToTerms")) {
+            window.location.replace("pre_screen.html");
+        }
+    } catch (error) {
+        console.error("Error accessing local storage:", error);
+        // Handle the error (e.g., fallback behavior, show error message)
     }
 }
 
@@ -158,6 +162,7 @@ userInput.addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
         event.preventDefault(); 
         handleUserInput(); 
+        console.log("Send button clicked");
     }
 });
 
@@ -205,15 +210,22 @@ async function simulateBotTyping(delayForWords, botResponse) {
         }
     }, delayForWords);
 
-    // Add event listener to the skip button
-    const skipButton = document.createElement("button");
+    // Create and append skip button to the document body
+    const skipButton = document.getElementById("skipButton");
     skipButton.textContent = "Skip";
     skipButton.classList.add("skip-button");
-    skipButton.addEventListener("click", () => {
+    document.body.appendChild(skipButton);
+
+    // Event listener to remove typing effect and display full message when skip button is clicked
+    skipButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        clearInterval(typingInterval);
         displayResponse();
+        console.log("Skip button clicked");
     });
-    typingElement.appendChild(skipButton);
 }
+
+
 
 
 // Helper function to match the question directly to avoid multiple operations
