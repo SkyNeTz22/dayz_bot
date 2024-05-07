@@ -4,7 +4,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const app = express();
 const port = 3000;
-const fileName = "./bugs.json";
+const fileName = path.join(__dirname, "bugs.json");
 
 app.use(cors()); // Use the cors middleware
 app.use(express.urlencoded({ extended: true }));
@@ -12,11 +12,13 @@ app.use(express.json());
 
 app.post('/submit', async (req, res) => {
     try {
-        const email = req.body.email; // Get username from form
-        const report = req.body.bug; // Get bug description from form
+        const { email, bug } = req.body; // Destructuring assignment to get email and bug
+        if (!email || !bug) {
+            return res.status(400).json({ message: 'Email and bug description are required' });
+        }
         const newData = {
-            "email": email,
-            "report": report
+            email,
+            report: bug
         };
         // Check if the file exists
         const fileExists = await doesFileExist(fileName);
@@ -62,4 +64,17 @@ async function writeJSONFile(filePath, data) {
 
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
+});
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+    console.log("Shutting down server...");
+    // Perform cleanup operations if necessary
+    process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+    console.log("Shutting down server...");
+    // Perform cleanup operations if necessary
+    process.exit(0);
 });

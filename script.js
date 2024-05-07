@@ -1,9 +1,9 @@
-const hasAgreedToTerms = localStorage.getItem("agreedToTerms");
-        if (!hasAgreedToTerms) {
-            // Redirect back to the pre-screen page if terms are not agreed
-            window.location.href = "pre_screen.html";
-        }
-
+function checkTerms() {
+    const hasAgreedToTerms = localStorage.getItem("agreedToTerms");
+    if (!hasAgreedToTerms) {
+        window.location.href = "pre_screen.html";
+    }
+}
 
 const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
@@ -26,6 +26,7 @@ const greetings = [
 ];
 const inappropriateKeywords = ["porn", "sex", "racism", "politics", "jew", "nigger", "idiot", "morron", "retard", "cp", "shut up", "stfu", "fuck off", "bite me", "suck my dick", "dick", "pussy", "nigga", "nigg", "N word", "dickhead", "motherfucker", "dick head", "mother fucker", "asshole", "bastard", "moron", "idiot", "anal"];
 let isBotTyping = false;
+let inappropriateWordCount = 0; // Variable to count inappropriate words
 
 // Function to get random greeting from the array
 function getRandomGreeting() {
@@ -33,7 +34,7 @@ function getRandomGreeting() {
     return greetings[randomIndex];
 }
 
-// Get to get random response from the array
+// Get random response from the array
 function getRandomResponse() {
     const randomIndex = Math.floor(Math.random() * randomResponses.length);
     return randomResponses[randomIndex];
@@ -56,17 +57,26 @@ async function handleUserInput() {
         return;
     }
     const userMessage = userInput.value.trim().toLowerCase();
+    let containsInappropriateKeyword = false;
+
     // Check for inappropriate keywords
-	const keywordRegex = new RegExp(inappropriateKeywords.map(keyword => `\\b${keyword}\\b`).join('|'), 'i');			// | - stands for an OR inside the regex, you can see that down below with hi, hello etc.
-	let containsInappropriateKeyword = false;
-	for (const keyword of inappropriateKeywords) {
-		const keywordRegex = new RegExp(`\\b${keyword}\\b`, 'i');
-		if (keywordRegex.test(userMessage)) {
-			containsInappropriateKeyword = true;
-			break;
-		}
-	}
+    for (const keyword of inappropriateKeywords) {
+        const keywordRegex = new RegExp(`\\b${keyword}\\b`, 'i');
+        if (keywordRegex.test(userMessage)) {
+            containsInappropriateKeyword = true;
+            inappropriateWordCount++; // Increment count if an inappropriate word is found
+            break;
+        }
+    }
+
     if (containsInappropriateKeyword) {
+        // Check if the count reaches 3
+        if (inappropriateWordCount >= 3) {
+            // Redirect the browser to the specified YouTube URL
+            window.location.href = "https://youtu.be/L3HQMbQAWRc?t=29";
+            return;
+        }
+
         // Delete the inappropriate message and display a placeholder message
         displayUserMessage("Message deleted", "color: red; font-weight: bold;" );
         userInput.value = ""; // Clear the input field
@@ -86,18 +96,21 @@ async function handleUserInput() {
     }
     // Handle greetings
 	const greetingRegex = new RegExp(`\\b(hi|hello|hey|sup|what's up)\\b`, 'i');	
-	if (greetingRegex.test(userMessage)) {
-		const randomGreeting = getRandomGreeting();
-		displayUserMessage(userMessage);
-		simulateBotTyping(50, randomGreeting).then(() => {
-			return new Promise(resolve => setTimeout(resolve, 1000));
-		}).then(() => {
-			isBotTyping = false;
-			userInput.value = ""; // Clear the input field
-		});
-		return;
-	}
+    if (greetingRegex.test(userMessage)) {
+        const randomGreeting = getRandomGreeting();
+        displayUserMessage(userMessage);
+        simulateBotTyping(50, randomGreeting).then(() => {
+            return new Promise(resolve => setTimeout(resolve, 1000));
+        }).then(() => {
+            isBotTyping = false;
+            userInput.value = ""; // Clear the input field
+        });
+        return;
+    }
+
     isBotTyping = true;
+
+
     const jsonCategoriesFiles = ["ammo_questions", "general_questions", "guns_questions", "medical_questions"];
     const jsonKeywordsFiles = ["keywords_ammo", "keywords_ar", "keywords_medical"];
     let question = userInput.value.trim();
@@ -110,6 +123,8 @@ async function handleUserInput() {
         try {
 			// First check questions
 			let checkQuestions = await checkJsonQuestions(question, jsonCategoriesFiles);
+            //
+
             // let checkQuestionsWordsOccurences = false;
             let checkKeywords = false;
 			if (checkQuestions.boolValue) {
@@ -138,22 +153,23 @@ async function handleUserInput() {
         isBotTyping = false;
     }
 }
-sendBtn.addEventListener("click", handleUserInput);				// sendBtn click
-userInput.addEventListener("keydown", function(event) {			// userInput enter key
+sendBtn.addEventListener("click", handleUserInput);				
+userInput.addEventListener("keydown", function(event) {			
     if (event.key === "Enter") {
-        event.preventDefault(); // Prevent the default Enter key behavior (e.g., adding a new line)
-        handleUserInput(); // Call the handleUserInput function
+        event.preventDefault(); 
+        handleUserInput(); 
     }
 });
 
 // Function to display user input after enter/click
+// Helper function to display user input
 function displayUserMessage(message, style = "") {
     const userMessage = `<div class="user-message" style="color: white;"><strong>Creature</strong>: <span style="${style}">${message}</span></div>`;
     chatBox.innerHTML += userMessage;
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Function to display output
+// Helper function to display bot output
 function displayBotMessage(message) {
     const botMessage = `<div class="bot-message">
     <img src="bot.png" alt="Robot" class="bot-avatar">
@@ -169,36 +185,54 @@ async function simulateBotTyping(delayForWords, botResponse) {
     typingElement.classList.add("bot-message", "bot-typing");
     chatBox.appendChild(typingElement);
     let currentCharIndex = 0;
+    let typingInterval;
 
-    const typingInterval = setInterval(() => {
+    function displayResponse() {
+        clearInterval(typingInterval);
+        if (typingElement.parentElement === chatBox) {
+            chatBox.removeChild(typingElement);
+            displayBotMessage(botResponse);
+        }
+    }
+
+    typingInterval = setInterval(() => {
         if (currentCharIndex <= botResponse.length) {
             typingElement.innerHTML = `<span class="typing-color">${botResponse.substring(0, currentCharIndex)}</span>`;
             chatBox.scrollTop = chatBox.scrollHeight;
             currentCharIndex++;
         } else {
-            clearInterval(typingInterval);
-            if (typingElement.parentElement === chatBox) {
-                chatBox.removeChild(typingElement);
-                displayBotMessage(botResponse);
-            }
+            displayResponse();
         }
     }, delayForWords);
+
+    // Add event listener to the skip button
+    const skipButton = document.createElement("button");
+    skipButton.textContent = "Skip";
+    skipButton.classList.add("skip-button");
+    skipButton.addEventListener("click", () => {
+        displayResponse();
+    });
+    typingElement.appendChild(skipButton);
 }
+
 
 // Helper function to match the question directly to avoid multiple operations
 async function checkJsonQuestions(question, jsonCategories) {
     try {
         for (const category of jsonCategories) {
-            const response = await fetch(category + ".json");
+            const response = await fetch(`${category}.json`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch ${category}.json: ${response.status}`);
+            }
             const jsonArray = await response.json();
             for (const jsonField of jsonArray) {
                 if (question === cleanStringsKeepSpaces(jsonField["question"]).toLowerCase()) {
                     simulateBotTyping(50, jsonField["answer"]);
-					let numberOfLetters = countLetters(jsonField["answer"]);
-					const result = [numberOfLetters, true];
-					result.intValue = result[0];
-					result.boolValue = result[1];
-					return result; // Match found => return true immediately
+                    let numberOfLetters = countLetters(jsonField["answer"]);
+                    const result = [numberOfLetters, true];
+                    result.intValue = result[0];
+                    result.boolValue = result[1];
+                    return result; // Match found => return true immediately
                 }
             }
         }
@@ -209,13 +243,15 @@ async function checkJsonQuestions(question, jsonCategories) {
     return false; // No matches found in questions
 }
 
-// Functionality to get best answer by matching with keyword combinations / single keywords
 async function findBestAnswer(question, keywordsCategories) {
     try {
         let bestAnswer = null;
         let bestMatchScore = 0;
         for (const keyword of keywordsCategories) {
-            const response = await fetch("./" + keyword + ".json");
+            const response = await fetch(`./${keyword}.json`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch ./${keyword}.json: ${response.status}`);
+            }
             const jsonArray = await response.json();
             for (const jsonField of jsonArray) {
                 const keywordCombinations = jsonField["keyword"].toLowerCase().split('+');
@@ -323,8 +359,4 @@ reportButton.addEventListener("click", () => {
     );
     bugReportWindow.focus();
 });
-
-
-
-
 
